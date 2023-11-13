@@ -5,46 +5,38 @@
 //  Created by Алия Давлетова on 09.11.2023.
 //
 
+import Combine
 import Foundation
 
-enum CollectionsSortParameter: String {
+enum ListCollectionsSortParameter: String {
     case byName = "name"
     case byAuthor = "author"
     case byID = "id"
 }
 
-enum CollectionsSortOrder: String {
+enum ListCollectionsSortOrder: String {
     case asc = "asc"
     case desc = "desc"
 }
 
-class CollectionsViewModel: ObservableObject {
-    private var service: CollectionServiceProtocol
-    private let collectionsPerPage = 20
+class ListCollectionsViewModel: ObservableObject {
+    @Published var collections = [CollectionViewModel]()
+    private var cancellableSet: Set<AnyCancellable> = []
     
-    @Published var collections: [CollectionViewModel] = []
-    
-    var page = 1
-    
-    init(service: CollectionServiceProtocol) {
-        self.service = service
-        self.getCollections()
+    init() {
+        let publisher = URLSession.shared
+            .dataTaskPublisher(for: URL(string:  "/api/v1/collections", relativeTo: baseURL)!)
+            .map(\.data)
+            .decode(type: [Collection].self, decoder: JSONDecoder())
+            .eraseToAnyPublisher()
     }
-    
-    func loadMoreContent(currentItem item: CollectionViewModel) {
-        let thresholdIndex = self.collections.index(self.collections.endIndex, offsetBy: -1)
-        if let lastID = Int(item.id), thresholdIndex == lastID {
-            page += 1
-            getCollections()
-        }
-    }
-    
+                
     func getCollections() {
         service.listCollections(
             perPage: collectionsPerPage,
             nextPage: page,
-            sortParameter: CollectionsSortParameter.byName,
-            sortOrder: CollectionsSortOrder.asc
+            sortParameter: ListCollectionsSortParameter.byName,
+            sortOrder: ListCollectionsSortOrder.asc
         ) { [weak self] (result: Result<[Collection], Error>) in
             guard let self = self else {
                 assertionFailure("self is empty")

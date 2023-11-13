@@ -7,4 +7,4 @@
 
 import Foundation
 
-let baseURL = URL(string: "https://64858e8ba795d24810b71189.mockapi.io")
+let baseURL = URL(string: "https://64858e8ba795d24810b71189.mockapi.io")!

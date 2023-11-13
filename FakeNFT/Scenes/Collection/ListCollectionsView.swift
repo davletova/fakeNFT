@@ -8,11 +8,11 @@
 import Foundation
 import SwiftUI
 
-struct CollectionsView: View {
-    @StateObject var collectionVM = CollectionsViewModel(service: CollectionService(networkClient: DefaultNetworkClient()))
+struct ListCollectionsView: View {
+    @StateObject var collectionVM = ListCollectionsViewModel(service: CollectionService(networkClient: DefaultNetworkClient()))
     
     var body: some View {
-        NavigationView{
+        NavigationStack {
             ScrollView {
                 LazyVStack {
                     ForEach(collectionVM.collections, id: \.self.id) { c in
@@ -23,12 +23,19 @@ struct CollectionsView: View {
                     }
                 }
             }
+            .toolbar {
+                Button {
+                    print("SORT")
+                } label: {
+                    Image("sort")
+                }
+            }
         }
     }
 }
 
 struct CollectionView_Previews: PreviewProvider {
     static var previews: some View {
-        CollectionsView()
+        ListCollectionsView()
     }
 }

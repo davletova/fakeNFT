@@ -11,8 +11,8 @@ protocol CollectionServiceProtocol {
     func listCollections(
         perPage: Int,
         nextPage: Int,
-        sortParameter: CollectionsSortParameter,
-        sortOrder: CollectionsSortOrder,
+        sortParameter: ListCollectionsSortParameter,
+        sortOrder: ListCollectionsSortOrder,
         _ handler: @escaping(Result<[Collection], Error>) -> Void
     )
 }
@@ -22,9 +22,9 @@ struct ListCollectionsRequest: NetworkRequest {
     
     var endpoint: URL?
     
-    init(nextPage: Int, perPage: Int, sortParameter: CollectionsSortParameter, sortOrder: CollectionsSortOrder) {
+    init(nextPage: Int, perPage: Int, sortParameter: ListCollectionsSortParameter, sortOrder: ListCollectionsSortOrder) {
         guard let url = URL(string: path, relativeTo: baseURL) else {
-            assertionFailure("failed to create url from baseURL: \(String(describing: baseURL?.absoluteString)), path: \(path)")
+            assertionFailure("failed to create url from baseURL: \(String(describing: baseURL.absoluteString)), path: \(path)")
             return
         }
         
@@ -53,8 +53,8 @@ class CollectionService: CollectionServiceProtocol {
     func listCollections(
         perPage: Int,
         nextPage: Int,
-        sortParameter: CollectionsSortParameter,
-        sortOrder: CollectionsSortOrder,
+        sortParameter: ListCollectionsSortParameter,
+        sortOrder: ListCollectionsSortOrder,
         _ handler: @escaping(Result<[Collection], Error>) -> Void
     ) {
         let req = ListCollectionsRequest(nextPage: nextPage, perPage: perPage, sortParameter: sortParameter, sortOrder: sortOrder)

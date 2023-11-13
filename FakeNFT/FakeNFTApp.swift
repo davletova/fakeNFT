@@ -11,7 +11,7 @@ import SwiftUI
 struct FakeNFTApp: App {
     var body: some Scene {
         WindowGroup {
-            CollectionsView()
+            TabBarView()
         }
     }
 }

@@ -23,5 +23,4 @@ struct CollectionViewModel {
     var description: String
     var author: String
     var id: String
-
 }
