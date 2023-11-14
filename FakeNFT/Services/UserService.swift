@@ -24,11 +24,11 @@ protocol UserServiceProtocol {
 final class UserService: UserServiceProtocol {
     private var listUserPath = "/api/v1/users"
     
-    let networkClient: NewNetworkClient
-    
-    init(networkClient: NewNetworkClient) {
-        self.networkClient = networkClient
-    }
+//    let networkClient: NewNetworkClient
+//    
+//    init(networkClient: NewNetworkClient) {
+//        self.networkClient = networkClient
+//    }
     
     func listUser(
         usersPerPage: Int,
@@ -54,6 +54,12 @@ final class UserService: UserServiceProtocol {
                 .eraseToAnyPublisher()
         }
         
-        return networkClient.send(request: req)
+//        return networkClient.send(request: req)
+        return URLSession.shared
+            .dataTaskPublisher(for: req)
+            .map(\.data)
+            .decode(type: [User].self, decoder: JSONDecoder())
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
     }
 }

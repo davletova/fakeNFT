@@ -26,23 +26,42 @@ struct ListUsers: View {
     let isLoading: Bool
     let onScrolledAtBottom: () -> Void
     
+    @State private var isConfirming = false
+    
     var body: some View {
-        ScrollView {
-            LazyVStack {
-                ForEach(Array(users.enumerated()), id: \.offset) { index, user in
-                    UserItemView(number: index + 1, name: user.name, avatarURL: user.avatar, position: user.rating)
-//                        .frame(maxWidth: UIScreen.main.bounds.width - 32)
-//                        .frame(height: 80)
-//                        .listRowSeparator(.hidden)
-                        .onAppear {
-                            if users.last == user {
-                                onScrolledAtBottom()
+        NavigationStack {
+            ScrollView {
+                LazyVStack {
+                    ForEach(Array(users.enumerated()), id: \.offset) { index, user in
+                        UserItemView(number: index + 1, name: user.name, avatarURL: user.avatar, position: user.rating)
+                            .onAppear {
+                                if users.last == user {
+                                    onScrolledAtBottom()
+                                }
                             }
-                        }
+                    }
                 }
             }
-            .padding(.horizontal, 16)
-//            .scrollContentBackground(.hidden)
+            .toolbar {
+                Button {
+                    self.isConfirming = true
+                } label: {
+                    Image("sort")
+                }
+            }
+        }
+        .confirmationDialog("Сортировка", isPresented: $isConfirming, titleVisibility: .visible) {
+            Button("По имени") {
+//                selection = "Red"
+            }
+
+            Button("По рейтингу") {
+//                selection = "Green"
+            }
+
+            Button("Закрыть", role: .cancel) {
+//                selection = "Blue"
+            }
         }
     }
 }

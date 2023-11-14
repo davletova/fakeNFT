@@ -35,7 +35,6 @@ struct UserItemView: View {
                     .scaledToFit()
                     .frame(width: 28, height: 28)
                     .clipShape(Circle())
-                    .overlay(Circle().stroke(Color.white, lineWidth: 2))
                     .shadow(radius: 4)
                     .padding(.leading, 16)
                 Text(name)
@@ -46,7 +45,6 @@ struct UserItemView: View {
                     .font(.system(size: 22, weight: .bold))
                     .foregroundStyle(Color.appBlack)
                     .padding(.trailing, 16)
-                Spacer()
             }
             .frame(height: 80)
             .background(Color.appLightGray)

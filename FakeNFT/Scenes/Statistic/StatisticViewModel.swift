@@ -35,10 +35,10 @@ class StatisticViewModel: ObservableObject {
     private let usersPerPage = 20
     private var subscriptions = Set<AnyCancellable>()
     
-    private var sortParameter = UsersSortParameter.byName
-    private var sortOrder = UsersSortOrder.asc
+    var sortParameter = UsersSortParameter.byName
+    var sortOrder = UsersSortOrder.asc
     
-    @Published var state = State()
+    @Published private(set) var state = State()
     
     init(service: UserServiceProtocol) {
         self.service = service
@@ -57,6 +57,7 @@ class StatisticViewModel: ObservableObject {
                 }
                 return userVMs
             }
+            .share()
             .sink(receiveCompletion: onReceiveC,
                   receiveValue: onReceive)
             .store(in: &subscriptions)
@@ -102,4 +103,30 @@ class StatisticViewModel: ObservableObject {
             id: user.id
         )
     }
+    
+    //private func convertUserToUserVM(from user: User) -> UserVM? {
+    //    guard let str = user.avatar.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed),
+    //          let avatarURL = URL(string: str)
+    //    else {
+    //        print("failed to create url from \(user.avatar)")
+    //        return nil
+    //    }
+    //
+    //    guard let str = user.website.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed),
+    //          let websietURL = URL(string: str)
+    //    else {
+    //        print("failed to create url from \(user.website)")
+    //        return nil
+    //    }
+    //
+    //    return UserVM(
+    //        name: user.name,
+    //        avatar: avatarURL,
+    //        description: user.description,
+    //        website: websietURL,
+    //        nfts: user.nfts,
+    //        rating: user.rating,
+    //        id: user.id
+    //    )
+    //}
 }

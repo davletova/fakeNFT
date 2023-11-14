@@ -28,7 +28,7 @@ struct TabBarView: View {
                     selectedTab == 2 ? Label("Корзина", image: "basketActive") : Label("Корзина", image: "basketNoActive")
                 }
                 .tag(2)
-            ListUsersContainer(viewModel: StatisticViewModel(service: UserService(networkClient: NewDefaultNetworkClient())))
+            ListUsersContainer(viewModel: StatisticViewModel(service: UserService()))
                 .tabItem {
                     selectedTab == 3 ? Label("Статистика", image: "statisticActive") : Label("Статистика", image: "statisticNoActive")
                 }
