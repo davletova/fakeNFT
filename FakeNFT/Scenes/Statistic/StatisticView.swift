@@ -10,33 +10,18 @@ import SwiftUI
 
 struct ListUsersContainer: View {
     @ObservedObject var viewModel: StatisticViewModel
-    
-    var body: some View {
-        ListUsers(
-            users: viewModel.state.users,
-            isLoading: viewModel.state.canLoadNextPage,
-            onScrolledAtBottom: viewModel.fetchNextPageIfPossible
-        )
-        .onAppear(perform: viewModel.fetchNextPageIfPossible)
-    }
-}
-
-struct ListUsers: View {
-    let users: [UserVM]
-    let isLoading: Bool
-    let onScrolledAtBottom: () -> Void
-    
     @State private var isConfirming = false
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 LazyVStack {
-                    ForEach(Array(users.enumerated()), id: \.offset) { index, user in
-                        UserItemView(number: index + 1, name: user.name, avatarURL: user.avatar, position: user.rating)
+                    ForEach(viewModel.users) { (userVM: UserViewModel) in
+                        //TODO: обработать кейс когда url == nil
+                        UserItemView(number: userVM.index, name: userVM.user.name, avatarURL: userVM.getAvatarURL()!, position: userVM.user.rating)
                             .onAppear {
-                                if users.last == user {
-                                    onScrolledAtBottom()
+                                if viewModel.users.last == userVM {
+                                    viewModel.fetchNextPageIfPossible()
                                 }
                             }
                     }
@@ -52,16 +37,27 @@ struct ListUsers: View {
         }
         .confirmationDialog("Сортировка", isPresented: $isConfirming, titleVisibility: .visible) {
             Button("По имени") {
-//                selection = "Red"
+                viewModel.sortParameter = .byName
+                viewModel.sortOrder = .asc
+                viewModel.users = []
+                viewModel.page = 1
+                viewModel.canLoadNextPage = true
+                
+                viewModel.fetchNextPageIfPossible()
             }
 
             Button("По рейтингу") {
-//                selection = "Green"
+                viewModel.sortParameter = .byRating
+                viewModel.sortOrder = .asc
+                viewModel.users = []
+                viewModel.page = 1
+                viewModel.canLoadNextPage = true
+                
+                viewModel.fetchNextPageIfPossible()
             }
 
-            Button("Закрыть", role: .cancel) {
-//                selection = "Blue"
-            }
+            Button("Закрыть", role: .cancel) { }
         }
+        .onAppear(perform: viewModel.fetchNextPageIfPossible)
     }
 }

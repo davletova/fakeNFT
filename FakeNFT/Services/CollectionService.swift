@@ -6,30 +6,33 @@
 //
 
 import Foundation
+import Combine
+
+enum CollectionServiceError: Error {
+    case invalidURL
+}
 
 protocol CollectionServiceProtocol {
     func listCollections(
         perPage: Int,
         nextPage: Int,
         sortParameter: ListCollectionsSortParameter,
-        sortOrder: ListCollectionsSortOrder,
-        _ handler: @escaping(Result<[Collection], Error>) -> Void
-    )
+        sortOrder: ListCollectionsSortOrder
+    ) -> AnyPublisher<[Collection], Error>
+    
+    func getCollection(id: String) -> AnyPublisher<Collection, Error>
 }
 
-struct ListCollectionsRequest: NetworkRequest {
-    private var path = "/api/v1/collections"
+class CollectionService: CollectionServiceProtocol {
+    private let getCollectionPath = "/api/v1/collections"
+    private let listCollectionPath = "/api/v1/collections"
     
-    var endpoint: URL?
-    
-    init(nextPage: Int, perPage: Int, sortParameter: ListCollectionsSortParameter, sortOrder: ListCollectionsSortOrder) {
-        guard let url = URL(string: path, relativeTo: baseURL) else {
-            assertionFailure("failed to create url from baseURL: \(String(describing: baseURL.absoluteString)), path: \(path)")
-            return
-        }
-        
-        var urlComponents = URLComponents(string: url.absoluteString)
-        
+    func listCollections(
+        perPage: Int,
+        nextPage: Int,
+        sortParameter: ListCollectionsSortParameter,
+        sortOrder: ListCollectionsSortOrder
+    ) -> AnyPublisher<[Collection], Error> {
         let queryItems: [URLQueryItem] = [
             URLQueryItem(name: "sortBy", value: sortParameter.rawValue),
             URLQueryItem(name: "order", value: sortOrder.rawValue),
@@ -37,28 +40,39 @@ struct ListCollectionsRequest: NetworkRequest {
             URLQueryItem(name: "limit", value: perPage.description)
         ]
         
-        urlComponents?.queryItems = queryItems
+        guard let req = URLRequest.makeHTTPRequest(
+            baseUrl: baseURL,
+            path: listCollectionPath,
+            method: HTTPMehtod.get,
+            queryItems: queryItems
+        ) else {
+            return Fail(error: CollectionServiceError.invalidURL)
+                .eraseToAnyPublisher()
+        }
         
-        endpoint = urlComponents?.url
-    }
-}
-
-class CollectionService: CollectionServiceProtocol {
-    let networkClient: NetworkClient
-    
-    init(networkClient: NetworkClient) {
-        self.networkClient = networkClient
+        return URLSession.shared
+            .dataTaskPublisher(for: req)
+            .map(\.data)
+            .decode(type: [Collection].self, decoder: JSONDecoder())
+            .receive(on: RunLoop.main)
+            .eraseToAnyPublisher()
     }
     
-    func listCollections(
-        perPage: Int,
-        nextPage: Int,
-        sortParameter: ListCollectionsSortParameter,
-        sortOrder: ListCollectionsSortOrder,
-        _ handler: @escaping(Result<[Collection], Error>) -> Void
-    ) {
-        let req = ListCollectionsRequest(nextPage: nextPage, perPage: perPage, sortParameter: sortParameter, sortOrder: sortOrder)
+    func getCollection(id: String) -> AnyPublisher<Collection, Error> {
+        guard let req = URLRequest.makeHTTPRequest(
+            baseUrl: baseURL,
+            path: getCollectionPath,
+            method: HTTPMehtod.get
+        ) else {
+            return Fail(error: CollectionServiceError.invalidURL)
+                .eraseToAnyPublisher()
+        }
         
-        networkClient.send(request: req, type: [Collection].self, onResponse: handler)
+        return URLSession.shared
+            .dataTaskPublisher(for: req)
+            .map(\.data)
+            .decode(type: Collection.self, decoder: JSONDecoder())
+            .receive(on: RunLoop.main)
+            .eraseToAnyPublisher()
     }
 }

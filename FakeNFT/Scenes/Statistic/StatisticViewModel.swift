@@ -24,109 +24,60 @@ enum UsersSortOrder: String {
     case desc = "desc"
 }
 
-class StatisticViewModel: ObservableObject {
-    struct State {
-        var users: [UserVM] = []
-        var page: Int = 1
-        var canLoadNextPage = true
+struct UserViewModel: Equatable, Identifiable {
+    var index: Int
+    var user: User
+    
+    var id: String {
+        user.id
     }
     
+    func getAvatarURL() -> URL? {
+        URL.fromRawString(user.avatar)
+    }
+    
+    func getWebsiteURL() -> URL? {
+        URL.fromRawString(user.website)
+    }
+}
+
+class StatisticViewModel: ObservableObject {
     private var service: UserServiceProtocol
     private let usersPerPage = 20
     private var subscriptions = Set<AnyCancellable>()
+  
+    @Published var users: [UserViewModel] = []
+    var page = 1
+    var canLoadNextPage = true
     
     var sortParameter = UsersSortParameter.byName
     var sortOrder = UsersSortOrder.asc
-    
-    @Published private(set) var state = State()
-    
+        
     init(service: UserServiceProtocol) {
         self.service = service
     }
     
     func fetchNextPageIfPossible() {
-        guard state.canLoadNextPage else { return }
+        guard canLoadNextPage else { return }
         
-        service.listUser(usersPerPage: usersPerPage, nextPage: state.page, sortParameter: sortParameter, sortOrder: sortOrder)
-            .print("-------", to: nil)
-            .tryMap { users in
-                var userVMs: [UserVM] = []
-                for user in users {
-                    let userVM = try self.convertUserToUserVM(from: user)
-                    userVMs.append(userVM)
-                }
-                return userVMs
+        service.listUser(usersPerPage: usersPerPage, nextPage: page, sortParameter: sortParameter, sortOrder: sortOrder)
+            .map { users in
+                users.map { UserViewModel(index: 1, user: $0) }
             }
-            .share()
             .sink(receiveCompletion: onReceiveC,
                   receiveValue: onReceive)
             .store(in: &subscriptions)
     }
     
     private func onReceiveC(_ completion: Subscribers.Completion<Error>) {
-        switch completion {
-        case .finished:
-            break
-        case .failure:
-            state.canLoadNextPage = false
+        if case .failure(_) = completion {
+            canLoadNextPage = false
         }
     }
     
-    private func onReceive(_ batch: [UserVM]) {
-        state.users += batch
-        state.page += 1
-        state.canLoadNextPage = batch.count == usersPerPage
+    private func onReceive(_ batch: [UserViewModel]) {
+        users += batch
+        page += 1
+        canLoadNextPage = batch.count == usersPerPage
     }
-    
-    private func convertUserToUserVM(from user: User) throws -> UserVM {
-        guard let str = user.avatar.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed),
-              let avatarURL = URL(string: str)
-        else {
-            print("failed to create url from \(user.avatar)")
-            throw ListUserError.invalidAvatarURL
-        }
-        
-        guard let str = user.website.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed),
-              let websietURL = URL(string: str)
-        else {
-            print("failed to create url from \(user.website)")
-            throw ListUserError.invalidWebsiteURL
-        }
-        
-        return UserVM(
-            name: user.name,
-            avatar: avatarURL,
-            description: user.description,
-            website: websietURL,
-            nfts: user.nfts,
-            rating: user.rating,
-            id: user.id
-        )
-    }
-    
-    //private func convertUserToUserVM(from user: User) -> UserVM? {
-    //    guard let str = user.avatar.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed),
-    //          let avatarURL = URL(string: str)
-    //    else {
-    //        print("failed to create url from \(user.avatar)")
-    //        return nil
-    //    }
-    //
-    //    guard let str = user.website.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed),
-    //          let websietURL = URL(string: str)
-    //    else {
-    //        print("failed to create url from \(user.website)")
-    //        return nil
-    //    }
-    //
-    //    return UserVM(
-    //        name: user.name,
-    //        avatar: avatarURL,
-    //        description: user.description,
-    //        website: websietURL,
-    //        nfts: user.nfts,
-    //        rating: user.rating,
-    //        id: user.id
-    //    )
-    //}
 }

@@ -16,11 +16,3 @@ struct Collection: Codable {
     var id: String
 }
 
-struct CollectionViewModel {
-    var name: String
-    var cover: URL
-    var nfts: [String]
-    var description: String
-    var author: String
-    var id: String
-}

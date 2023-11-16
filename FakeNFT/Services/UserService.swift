@@ -24,12 +24,6 @@ protocol UserServiceProtocol {
 final class UserService: UserServiceProtocol {
     private var listUserPath = "/api/v1/users"
     
-//    let networkClient: NewNetworkClient
-//    
-//    init(networkClient: NewNetworkClient) {
-//        self.networkClient = networkClient
-//    }
-    
     func listUser(
         usersPerPage: Int,
         nextPage: Int,
@@ -49,17 +43,16 @@ final class UserService: UserServiceProtocol {
             method: HTTPMehtod.get,
             queryItems: queryItems
         ) else {
-            print("failed to create request")
             return Fail(error: UserServiceError.invalidURL)
                 .eraseToAnyPublisher()
         }
-        
+        print(req.url?.absoluteString)
 //        return networkClient.send(request: req)
         return URLSession.shared
             .dataTaskPublisher(for: req)
             .map(\.data)
             .decode(type: [User].self, decoder: JSONDecoder())
-            .receive(on: DispatchQueue.main)
+            .receive(on: RunLoop.main)
             .eraseToAnyPublisher()
     }
 }

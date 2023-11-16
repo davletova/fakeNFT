@@ -13,7 +13,6 @@ struct CollectionItemView: View {
     @State private var title: String
     @State private var url: URL
     
-    
     init(name: String, imageURL: URL) {
         _title = State(initialValue: name)
         _url = State(initialValue: imageURL)
@@ -25,6 +24,7 @@ struct CollectionItemView: View {
                 .resizable()
                 .scaledToFill()
                 .frame(height: (UIScreen.main.bounds.width - 32) * 0.5)
+                //TODO: cornerRadius deprecated
                 .cornerRadius(16)
                 .clipped()
                 .padding(.horizontal, 16)

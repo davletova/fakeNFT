@@ -9,16 +9,17 @@ import Foundation
 import SwiftUI
 
 struct ListCollectionsView: View {
-    @StateObject var collectionVM = ListCollectionsViewModel(service: CollectionService(networkClient: DefaultNetworkClient()))
+    @StateObject var viewModel = ListCollectionsViewModel(service: CollectionService())
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 LazyVStack {
-                    ForEach(collectionVM.collections, id: \.self.id) { c in
-                        CollectionItemView(name: c.name, imageURL: c.cover)
+                    ForEach(viewModel.collections) { c in
+                        //TODO: обработать кейс когда getURL == nil
+                        CollectionItemView(name: c.collection.name, imageURL: c.getCoverURL()!)
                             .onAppear(){
-                                collectionVM.loadMoreContent(currentItem: c)
+                                viewModel.fetchNextPageIfPossible()
                             }
                     }
                 }
