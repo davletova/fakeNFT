@@ -10,12 +10,10 @@ import SwiftUI
 import Kingfisher
 
 struct NFTItemView: View {
-    @State private var nft: NFTViewModel
-    @State private var width: CGFloat
+    @State private var nft: NFTDisplayModel
     
-    init(nft: NFTViewModel, width: CGFloat) {
+    init(nft: NFTDisplayModel) {
         _nft = State(initialValue: nft)
-        _width = State(initialValue: width)
     }
     
     var body: some View {
@@ -25,7 +23,7 @@ struct NFTItemView: View {
                     .resizable()
                     .scaledToFill()
                     .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .frame(width: width, height: width)
+//                    .frame(width: .infinity)
                 Image(nft.isLike ? "like" : "noLike")
                     .frame(width: 40, height: 40)
             }
@@ -44,18 +42,18 @@ struct NFTItemView: View {
                 }
                 Spacer()
                 Image(nft.isOnOrder ? "basket" : "basketCross")
-                    .frame(width: 40, height: 40)
+                    .frame(width: 30, height: 30)
             }
-            
+            //.frame(maxWidth: .infinity)
         }
+//        .frame(width: width, height: width + 64)
     }
-    
 }
 
 struct NFTItemView_Previews: PreviewProvider {
     static var previews: some View {
         NFTItemView(
-            nft: NFTViewModel(
+            nft: NFTDisplayModel(
                 nft: NFT(
                     createdAt: "",
                     name: "Archie",
@@ -72,8 +70,7 @@ struct NFTItemView_Previews: PreviewProvider {
                 ),
             isLike: true,
             isOnOrder: false
-            ),
-            width: 108
+            )
         )
     }
 }

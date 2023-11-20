@@ -9,18 +9,22 @@ import Foundation
 import SwiftUI
 
 struct ListCollectionsView: View {
-    @StateObject var viewModel = ListCollectionsViewModel(service: CollectionService())
+    @ObservedObject var viewModel: ListCollectionsViewModel
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 LazyVStack {
-                    ForEach(viewModel.collections) { c in
+                    ForEach(viewModel.collections) { (collectionDisplayModel: CollectionDisplayModel) in
                         //TODO: обработать кейс когда getURL == nil
-                        CollectionItemView(name: c.collection.name, imageURL: c.getCoverURL()!)
-                            .onAppear(){
-                                viewModel.fetchNextPageIfPossible()
-                            }
+                        NavigationLink {
+                            CollectionView(collection: collectionDisplayModel.collection)
+                        } label: {
+                            CollectionItemView(name: collectionDisplayModel.collection.name, imageURL: collectionDisplayModel.getCoverURL()!)
+                                .onAppear(){
+                                    viewModel.fetchNextPageIfPossible()
+                                }
+                        }
                     }
                 }
             }
@@ -31,12 +35,9 @@ struct ListCollectionsView: View {
                     Image("sort")
                 }
             }
+            .onAppear {
+                viewModel.fetchNextPageIfPossible()
+            }
         }
-    }
-}
-
-struct CollectionView_Previews: PreviewProvider {
-    static var previews: some View {
-        ListCollectionsView()
     }
 }

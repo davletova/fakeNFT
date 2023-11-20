@@ -8,9 +8,10 @@
 import Foundation
 
 extension URL {
-    static func fromRawString(_ str: String) -> URL? {
+    static func fromRawString(_ str: String) -> URL {
         str
             .addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)
-            .flatMap { URL(string: $0) }
+            .flatMap { URL(string: $0) }!
+//        URL(string: str.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)!)!
     }
 }

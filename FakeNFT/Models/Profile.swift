@@ -12,7 +12,7 @@ struct Profile: Decodable {
     var avatar: String
     var description: String
     var website: String
-    var nfts: Set<String>
-    var likes: Set<String>
+    var nfts: [String]
+    var likes: [String]
     var id: String
 }

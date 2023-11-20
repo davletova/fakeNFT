@@ -61,7 +61,7 @@ class CollectionService: CollectionServiceProtocol {
     func getCollection(id: String) -> AnyPublisher<Collection, Error> {
         guard let req = URLRequest.makeHTTPRequest(
             baseUrl: baseURL,
-            path: getCollectionPath,
+            path: getCollectionPath + "/" + id,
             method: HTTPMehtod.get
         ) else {
             return Fail(error: CollectionServiceError.invalidURL)

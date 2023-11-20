@@ -19,7 +19,7 @@ enum ListCollectionsSortOrder: String {
     case desc = "desc"
 }
 
-struct CollectionViewModel: Identifiable {
+struct CollectionDisplayModel: Identifiable, Equatable, Hashable {
     var collection: Collection
     
     var id: String {
@@ -36,7 +36,7 @@ class ListCollectionsViewModel: ObservableObject {
     private let collectionsPerPage = 20
     private var subscriptions = Set<AnyCancellable>()
     
-    @Published var collections: [CollectionViewModel] = []
+    @Published var collections: [CollectionDisplayModel] = []
     var page = 1
     var canLoadNextPage = true
 
@@ -52,7 +52,7 @@ class ListCollectionsViewModel: ObservableObject {
         
         service.listCollections(perPage: collectionsPerPage, nextPage: page, sortParameter: sortParameter, sortOrder: sortOrder)
             .map { collections in
-                collections.map { CollectionViewModel(collection: $0) }
+                collections.map { CollectionDisplayModel(collection: $0) }
             }
             .sink(receiveCompletion: onReceiveC,
                   receiveValue: onReceive)
@@ -65,7 +65,7 @@ class ListCollectionsViewModel: ObservableObject {
         }
     }
     
-    private func onReceive(_ batch: [CollectionViewModel]) {
+    private func onReceive(_ batch: [CollectionDisplayModel]) {
         collections += batch
         page += 1
         canLoadNextPage = batch.count == collectionsPerPage

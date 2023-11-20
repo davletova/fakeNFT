@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Collection: Codable {
+struct Collection: Codable, Hashable {
     var name: String
     var cover: String
     var nfts: [String]

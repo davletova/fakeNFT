@@ -23,7 +23,7 @@ class NFTService: NFTServiceProtocol {
     func getNFT(_ id: String) -> AnyPublisher<NFT, Error> {
         guard let req = URLRequest.makeHTTPRequest(
             baseUrl: baseURL,
-            path: getNFTPath,
+            path: getNFTPath + "/" + id,
             method: HTTPMehtod.get
         ) else {
             return Fail(error: NFTServiceError.invalidURL)

@@ -19,23 +19,25 @@ struct CollectionItemView: View {
     }
     
     var body: some View {
-        VStack(spacing: 4) {
-            KFImage(url)
-                .resizable()
-                .scaledToFill()
-                .frame(height: (UIScreen.main.bounds.width - 32) * 0.5)
+        VStack {
+            VStack(spacing: 4) {
+                KFImage(url)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(height: (UIScreen.main.bounds.width - 32) * 0.5)
                 //TODO: cornerRadius deprecated
-                .cornerRadius(16)
-                .clipped()
-                .padding(.horizontal, 16)
-        }
-        HStack {
-            Text(title)
-                .font(.system(size: 17))
-                .fontWeight(.bold)
-                .foregroundColor(Color.appBlack)
-                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
-            Spacer()
+                    .cornerRadius(16)
+                    .clipped()
+                    .padding(.horizontal, 16)
+            }
+            HStack {
+                Text(title)
+                    .font(.system(size: 17))
+                    .fontWeight(.bold)
+                    .foregroundColor(Color.appBlack)
+                    .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
+                Spacer()
+            }
         }
     }
 }

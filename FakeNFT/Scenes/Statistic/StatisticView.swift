@@ -16,7 +16,7 @@ struct ListUsersContainer: View {
         NavigationStack {
             ScrollView {
                 LazyVStack {
-                    ForEach(viewModel.users) { (userVM: UserViewModel) in
+                    ForEach(viewModel.users) { (userVM: UserDisplayModel) in
                         //TODO: обработать кейс когда url == nil
                         UserItemView(number: userVM.index, name: userVM.user.name, avatarURL: userVM.getAvatarURL()!, position: userVM.user.rating)
                             .onAppear {

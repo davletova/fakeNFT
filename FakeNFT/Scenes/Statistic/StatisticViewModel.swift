@@ -24,7 +24,7 @@ enum UsersSortOrder: String {
     case desc = "desc"
 }
 
-struct UserViewModel: Equatable, Identifiable {
+struct UserDisplayModel: Equatable, Identifiable {
     var index: Int
     var user: User
     
@@ -46,7 +46,7 @@ class StatisticViewModel: ObservableObject {
     private let usersPerPage = 20
     private var subscriptions = Set<AnyCancellable>()
   
-    @Published var users: [UserViewModel] = []
+    @Published var users: [UserDisplayModel] = []
     var page = 1
     var canLoadNextPage = true
     
@@ -62,7 +62,7 @@ class StatisticViewModel: ObservableObject {
         
         service.listUser(usersPerPage: usersPerPage, nextPage: page, sortParameter: sortParameter, sortOrder: sortOrder)
             .map { users in
-                users.map { UserViewModel(index: 1, user: $0) }
+                users.map { UserDisplayModel(index: 1, user: $0) }
             }
             .sink(receiveCompletion: onReceiveC,
                   receiveValue: onReceive)
@@ -75,7 +75,7 @@ class StatisticViewModel: ObservableObject {
         }
     }
     
-    private func onReceive(_ batch: [UserViewModel]) {
+    private func onReceive(_ batch: [UserDisplayModel]) {
         users += batch
         page += 1
         canLoadNextPage = batch.count == usersPerPage
