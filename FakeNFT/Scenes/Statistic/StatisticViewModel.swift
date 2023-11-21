@@ -47,6 +47,8 @@ class StatisticViewModel: ObservableObject {
     private var subscriptions = Set<AnyCancellable>()
   
     @Published var users: [UserDisplayModel] = []
+    @Published var state: StateFoo
+    
     var page = 1
     var canLoadNextPage = true
     
@@ -55,12 +57,19 @@ class StatisticViewModel: ObservableObject {
         
     init(service: UserServiceProtocol) {
         self.service = service
+        
+        self.state = .loading
+        self.fetchNextPageIfPossible()
     }
     
     func fetchNextPageIfPossible() {
         guard canLoadNextPage else { return }
         
         service.listUser(usersPerPage: usersPerPage, nextPage: page, sortParameter: sortParameter, sortOrder: sortOrder)
+            .mapError { [weak self] err in
+                self?.state = .failed(err)
+                return err
+            }
             .map { users in
                 users.map { UserDisplayModel(index: 1, user: $0) }
             }
@@ -76,6 +85,7 @@ class StatisticViewModel: ObservableObject {
     }
     
     private func onReceive(_ batch: [UserDisplayModel]) {
+        state = .loaded
         users += batch
         page += 1
         canLoadNextPage = batch.count == usersPerPage

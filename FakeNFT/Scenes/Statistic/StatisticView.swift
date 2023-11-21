@@ -15,16 +15,28 @@ struct ListUsersContainer: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                LazyVStack {
-                    ForEach(viewModel.users) { (userVM: UserDisplayModel) in
-                        //TODO: обработать кейс когда url == nil
-                        UserItemView(number: userVM.index, name: userVM.user.name, avatarURL: userVM.getAvatarURL()!, position: userVM.user.rating)
-                            .onAppear {
-                                if viewModel.users.last == userVM {
-                                    viewModel.fetchNextPageIfPossible()
+                
+                switch viewModel.state {
+                case .loaded:
+                    LazyVStack {
+                        ForEach(viewModel.users) { (userVM: UserDisplayModel) in
+                            //TODO: обработать кейс когда url == nil
+                            UserItemView(number: userVM.index, name: userVM.user.name, avatarURL: userVM.getAvatarURL()!, position: userVM.user.rating)
+                                .onAppear {
+                                    if viewModel.users.last == userVM {
+                                        viewModel.fetchNextPageIfPossible()
+                                    }
                                 }
-                            }
+                        }
                     }
+                case .loading:
+                    ProgressView()
+                        .frame(width: 60, height: 60)
+                        .padding(.top, 100)
+                case .failed(_):
+                    Text("ERROR")
+                        .font(.system(size: 24, weight: .bold))
+                        .frame(width: 200, height: 200)
                 }
             }
             .toolbar {
@@ -58,6 +70,5 @@ struct ListUsersContainer: View {
 
             Button("Закрыть", role: .cancel) { }
         }
-        .onAppear(perform: viewModel.fetchNextPageIfPossible)
     }
 }

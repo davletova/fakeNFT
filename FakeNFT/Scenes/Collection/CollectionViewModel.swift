@@ -66,6 +66,7 @@ class CollectionViewModel: ObservableObject {
         let nfts$ = Publishers.MergeMany(nftIds.map(nftService.getNFT)).collect()
         
         Publishers.Zip3(profile$, order$, nfts$)
+            .print("----", to: nil)
             .map { profile, ord, nfts in
                 nfts.map { nft in
                     NFTDisplayModel(nft: nft, isLike: profile.likes.contains(nft.id), isOnOrder: ord.nfts.contains(nft.id))

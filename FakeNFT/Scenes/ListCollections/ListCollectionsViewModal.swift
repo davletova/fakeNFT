@@ -37,6 +37,8 @@ class ListCollectionsViewModel: ObservableObject {
     private var subscriptions = Set<AnyCancellable>()
     
     @Published var collections: [CollectionDisplayModel] = []
+    @Published var state: StateFoo
+    
     var page = 1
     var canLoadNextPage = true
 
@@ -45,12 +47,21 @@ class ListCollectionsViewModel: ObservableObject {
     
     init(service: CollectionServiceProtocol) {
         self.service = service
+        
+        self.state = .loading
+        
+        self.fetchNextPageIfPossible()
     }
     
     func fetchNextPageIfPossible() {
         guard canLoadNextPage else { return }
         
         service.listCollections(perPage: collectionsPerPage, nextPage: page, sortParameter: sortParameter, sortOrder: sortOrder)
+//            .print("---------", to: nil)
+            .mapError { [weak self] err in
+                self?.state = .failed(err)
+                return err
+            }
             .map { collections in
                 collections.map { CollectionDisplayModel(collection: $0) }
             }
@@ -66,6 +77,7 @@ class ListCollectionsViewModel: ObservableObject {
     }
     
     private func onReceive(_ batch: [CollectionDisplayModel]) {
+        state = .loaded
         collections += batch
         page += 1
         canLoadNextPage = batch.count == collectionsPerPage

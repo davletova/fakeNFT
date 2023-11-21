@@ -14,18 +14,30 @@ struct ListCollectionsView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                LazyVStack {
-                    ForEach(viewModel.collections) { (collectionDisplayModel: CollectionDisplayModel) in
-                        //TODO: обработать кейс когда getURL == nil
-                        NavigationLink {
-                            CollectionView(collection: collectionDisplayModel.collection)
-                        } label: {
-                            CollectionItemView(name: collectionDisplayModel.collection.name, imageURL: collectionDisplayModel.getCoverURL()!)
-                                .onAppear(){
-                                    viewModel.fetchNextPageIfPossible()
+                switch viewModel.state {
+                case .loaded:
+                    LazyVStack {
+                        ForEach(viewModel.collections) { (collectionDisplayModel: CollectionDisplayModel) in
+                            //TODO: обработать кейс когда getURL == nil
+                            NavigationLink(value: collectionDisplayModel) {
+                                CollectionItemView(name: collectionDisplayModel.collection.name, imageURL: collectionDisplayModel.getCoverURL()!)
+                                    .onAppear(){
+                                        viewModel.fetchNextPageIfPossible()
                                 }
+                            }
+                        }
+                        .navigationDestination(for: CollectionDisplayModel.self) { collectionDisplayModel in
+                            CollectionView(collection: collectionDisplayModel.collection)
                         }
                     }
+                case .loading:
+                    ProgressView()
+                        .frame(width: 60, height: 60)
+                        .padding(.top, 100)
+                case .failed(_):
+                    Text("ERROR")
+                        .font(.system(size: 24, weight: .bold))
+                        .frame(width: 200, height: 200)
                 }
             }
             .toolbar {
@@ -35,9 +47,10 @@ struct ListCollectionsView: View {
                     Image("sort")
                 }
             }
-            .onAppear {
-                viewModel.fetchNextPageIfPossible()
-            }
+//            .onAppear {
+//                print("onAppear")
+//                viewModel.fetchNextPageIfPossible()
+//            }
         }
     }
 }
