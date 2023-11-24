@@ -13,7 +13,7 @@ struct TabBarView: View {
     
     var body: some View {
         TabView(selection: $selectedTab) {
-            Text("Профиль")
+            ProfileView(viewModel: ProfileViewModel(service: ProfileService()))
                 .tabItem {
                     selectedTab == 0 ? Label("Профиль", image: "profileActive") : Label("Профиль", image: "profileNoActive")
                 }

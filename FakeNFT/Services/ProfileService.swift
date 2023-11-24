@@ -22,8 +22,7 @@ final class ProfileService: ProfileServiceProtocol {
     func getProfile(id: String) -> AnyPublisher<Profile, Error> {
         guard let req = URLRequest.makeHTTPRequest(
             baseUrl: baseURL,
-            //TODO: здесь должен быть id авторизованного пользователя
-            path: getUserPath + "/1", 
+            path: getUserPath + "/" + id,
             method: HTTPMehtod.get
         ) else {
             return Fail(error: ProfileServiceError.invalidURL)

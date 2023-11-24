@@ -10,15 +10,10 @@ import SwiftUI
 import Kingfisher
 
 struct CollectionView: View {
-    @ObservedObject var viewModel: CollectionViewModel
+    private var viewModel: CollectionViewModel
     
     init(collection: Collection) {
-        self.viewModel = CollectionViewModel(
-            collection: collection,
-            nftService: NFTService(),
-            profileService: ProfileService(),
-            orderService: OrderService()
-        )
+        self.viewModel = CollectionViewModel(collection: collection)
     }
     
     var body: some View {
@@ -53,22 +48,18 @@ struct CollectionView: View {
                         .padding(.top, 0)
                 }
                 .padding(.bottom, 24)
-                .padding(.horizontal, 16)
                 
-                switch viewModel.state {
-                case .loaded:
-                    ListNFTView(nfts: viewModel.nfts)
-                        .padding(.horizontal, 16)
-                case .loading:
-                    ProgressView()
-                        .frame(width: 60, height: 60)
-                        .padding(.top, 100)
-                case .failed(_):
-                    Text("ERROR")
-                        .font(.system(size: 24, weight: .bold))
-                        .frame(width: 200, height: 200)
-                }
+                ListNFTView(
+                    viewModel: ListNFTViewModel(
+                        nfts: viewModel.collection.collection.nfts,
+                        nftService: NFTService(),
+                        profileService: ProfileService(),
+                        orderService: OrderService()
+                    )
+                )
+                
             }
+            .padding(.horizontal, 16)
         }
         .edgesIgnoringSafeArea(.top)
     }

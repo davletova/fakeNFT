@@ -19,10 +19,13 @@ protocol UserServiceProtocol {
         sortParameter: UsersSortParameter,
         sortOrder: UsersSortOrder
     ) -> AnyPublisher<[User], Error>
+    
+    func getUser(id: String) -> AnyPublisher<User, Error>
 }
 
 final class UserService: UserServiceProtocol {
     private var listUserPath = "/api/v1/users"
+    private var getUserPath = "/api/v1/users"
     
     func listUser(
         usersPerPage: Int,
@@ -50,6 +53,24 @@ final class UserService: UserServiceProtocol {
             .dataTaskPublisher(for: req)
             .map(\.data)
             .decode(type: [User].self, decoder: JSONDecoder())
+            .receive(on: RunLoop.main)
+            .eraseToAnyPublisher()
+    }
+    
+    func getUser(id: String) -> AnyPublisher<User, Error> {
+        guard let req = URLRequest.makeHTTPRequest(
+            baseUrl: baseURL,
+            path: getUserPath + "/" + id,
+            method: HTTPMehtod.get
+        ) else {
+            return Fail(error: UserServiceError.invalidURL)
+                .eraseToAnyPublisher()
+        }
+        
+        return URLSession.shared
+            .dataTaskPublisher(for: req)
+            .map(\.data)
+            .decode(type: User.self, decoder: JSONDecoder())
             .receive(on: RunLoop.main)
             .eraseToAnyPublisher()
     }

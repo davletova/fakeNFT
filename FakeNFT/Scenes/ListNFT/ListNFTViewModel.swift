@@ -1,40 +1,15 @@
 //
-//  CollectionViewModel.swift
+//  ListNFTViewModel.swift
 //  FakeNFT
 //
-//  Created by Алия Давлетова on 14.11.2023.
+//  Created by Алия Давлетова on 22.11.2023.
 //
 
 import Foundation
+import SwiftUI
 import Combine
 
-enum StateFoo {
-    case loading
-    case failed(Error)
-    case loaded
-}
-
-struct SingleCollectionDisplayModel {
-    var collection: Collection
-    
-    func getCoverURL() -> URL {
-        URL.fromRawString(collection.cover)
-    }
-}
-
-struct NFTDisplayModel: Identifiable {
-    var nft: NFT
-    var isLike: Bool
-    var isOnOrder: Bool
-   
-    var id: String { nft.id }
-    
-    func getImageURLs() -> [URL] {
-        nft.images.compactMap { URL.fromRawString($0) }
-    }
-}
-
-class CollectionViewModel: ObservableObject {
+class ListNFTViewModel: ObservableObject {
     private var nftService: NFTServiceProtocol
     private var profileService: ProfileServiceProtocol
     private var orderService: OrderServiceProtocol
@@ -43,21 +18,17 @@ class CollectionViewModel: ObservableObject {
     private var onOrder = Set<String>()
     
     private var subscriptions = Set<AnyCancellable>()
-
-    var collection: SingleCollectionDisplayModel
     
-    @Published var nfts: [NFTDisplayModel] = []
+    @Published var nftDisplayModels: [NFTDisplayModel] = []
     @Published var state: StateFoo
     
-    init(collection: Collection, nftService: NFTServiceProtocol, profileService: ProfileServiceProtocol, orderService: OrderServiceProtocol) {
+    init(nfts: [String], nftService: NFTServiceProtocol, profileService: ProfileServiceProtocol, orderService: OrderServiceProtocol) {
         self.nftService = nftService
         self.profileService = profileService
         self.orderService = orderService
         
-        self.collection = SingleCollectionDisplayModel(collection: collection)
-        
         self.state = .loading
-        loadData(collection.nfts)
+        self.loadData(nfts)
     }
     
     func loadData(_ nftIds: [String]) {
@@ -77,9 +48,9 @@ class CollectionViewModel: ObservableObject {
                 return err
             }
             .replaceError(with: [NFTDisplayModel]())
-//            .assign(to: &$nfts)
+        //            .assign(to: &$nfts)
             .sink { [weak self] nfts in
-                self?.nfts = nfts
+                self?.nftDisplayModels = nfts
                 self?.state = .loaded
             }
             .store(in: &subscriptions)
