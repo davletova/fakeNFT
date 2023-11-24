@@ -23,17 +23,7 @@ struct SingleCollectionDisplayModel {
     }
 }
 
-struct NFTDisplayModel: Identifiable {
-    var nft: NFT
-    var isLike: Bool
-    var isOnOrder: Bool
-   
-    var id: String { nft.id }
-    
-    func getImageURLs() -> [URL] {
-        nft.images.compactMap { URL.fromRawString($0) }
-    }
-}
+
 
 class CollectionViewModel: ObservableObject {
     var collection: SingleCollectionDisplayModel

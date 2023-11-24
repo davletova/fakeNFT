@@ -15,7 +15,6 @@ struct ListUsersContainer: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                
                 switch viewModel.state {
                 case .loaded:
                     LazyVStack {

@@ -23,7 +23,7 @@ struct TabBarView: View {
                     selectedTab == 1 ? Label("Каталог", image: "catalogActive") : Label("Каталог", image: "catalogNoActive")
                 }
                 .tag(1)
-            Text("Корзина")
+            CartView(viewModel: CartViewModel(nftService: NFTService(), orderService: OrderService()))
                 .tabItem {
                     selectedTab == 2 ? Label("Корзина", image: "basketActive") : Label("Корзина", image: "basketNoActive")
                 }

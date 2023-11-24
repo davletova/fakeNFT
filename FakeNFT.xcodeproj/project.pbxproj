@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4D5EA3872B109C9200E9DBB5 /* CartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5EA3862B109C9200E9DBB5 /* CartView.swift */; };
+		4D5EA3892B109CDA00E9DBB5 /* CartItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5EA3882B109CDA00E9DBB5 /* CartItemView.swift */; };
+		4D5EA38B2B10A2F000E9DBB5 /* CartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5EA38A2B10A2F000E9DBB5 /* CartViewModel.swift */; };
 		4D917C152B013D3D004607D6 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D917C142B013D3D004607D6 /* TabBarView.swift */; };
 		4D917C192B01D8D9004607D6 /* StatisticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D917C182B01D8D9004607D6 /* StatisticView.swift */; };
 		4D917C1B2B01D8E9004607D6 /* StatisticViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D917C1A2B01D8E9004607D6 /* StatisticViewModel.swift */; };
@@ -78,6 +81,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4D5EA3862B109C9200E9DBB5 /* CartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartView.swift; sourceTree = "<group>"; };
+		4D5EA3882B109CDA00E9DBB5 /* CartItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartItemView.swift; sourceTree = "<group>"; };
+		4D5EA38A2B10A2F000E9DBB5 /* CartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartViewModel.swift; sourceTree = "<group>"; };
 		4D917C142B013D3D004607D6 /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
 		4D917C182B01D8D9004607D6 /* StatisticView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticView.swift; sourceTree = "<group>"; };
 		4D917C1A2B01D8E9004607D6 /* StatisticViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticViewModel.swift; sourceTree = "<group>"; };
@@ -159,6 +165,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4D5EA3852B109C6800E9DBB5 /* Cart */ = {
+			isa = PBXGroup;
+			children = (
+				4D5EA3862B109C9200E9DBB5 /* CartView.swift */,
+				4D5EA3882B109CDA00E9DBB5 /* CartItemView.swift */,
+				4D5EA38A2B10A2F000E9DBB5 /* CartViewModel.swift */,
+			);
+			path = Cart;
+			sourceTree = "<group>";
+		};
 		4D917C132B013D27004607D6 /* TabBar */ = {
 			isa = PBXGroup;
 			children = (
@@ -180,6 +196,7 @@
 		4D917C172B01D86B004607D6 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				4D5EA3852B109C6800E9DBB5 /* Cart */,
 				4D917C6D2B0F7334004607D6 /* WebView */,
 				4D917C682B0F4C3F004607D6 /* EditProfile */,
 				4D917C612B0DF782004607D6 /* MyNFTList */,
@@ -529,6 +546,7 @@
 				4D917C212B01DCC5004607D6 /* NewNetworkClient.swift in Sources */,
 				4D917C152B013D3D004607D6 /* TabBarView.swift in Sources */,
 				4D917C302B03738F004607D6 /* CollectionView.swift in Sources */,
+				4D5EA38B2B10A2F000E9DBB5 /* CartViewModel.swift in Sources */,
 				4DFE262C2AFCEBB200B32F5B /* NetworkTask.swift in Sources */,
 				4DFE26332AFCEE9000B32F5B /* CollectionService.swift in Sources */,
 				4DFE25F32AFCB7B200B32F5B /* ContentView.swift in Sources */,
@@ -546,6 +564,7 @@
 				4D917C192B01D8D9004607D6 /* StatisticView.swift in Sources */,
 				4DFE262E2AFCEBB200B32F5B /* NetworkRequest.swift in Sources */,
 				4D917C392B038BAE004607D6 /* NFT.swift in Sources */,
+				4D5EA3872B109C9200E9DBB5 /* CartView.swift in Sources */,
 				4D917C602B0DB956004607D6 /* ListNFTViewModel.swift in Sources */,
 				4D917C1B2B01D8E9004607D6 /* StatisticViewModel.swift in Sources */,
 				4DFE26242AFCE90300B32F5B /* Collection.swift in Sources */,
@@ -555,6 +574,7 @@
 				4DFE26212AFCE1BC00B32F5B /* ListCollectionsViewModal.swift in Sources */,
 				4D917C6C2B0F4CDA004607D6 /* EditProfileViewModel.swift in Sources */,
 				4D917C532B0C6AA1004607D6 /* ProfileView.swift in Sources */,
+				4D5EA3892B109CDA00E9DBB5 /* CartItemView.swift in Sources */,
 				4D917C242B01DD13004607D6 /* NewNetworkTask.swift in Sources */,
 				4D917C502B04E201004607D6 /* Order.swift in Sources */,
 				4DFE261C2AFCB7F500B32F5B /* Color+GetAppColor.swift in Sources */,

@@ -46,7 +46,8 @@ class MyNFTListViewModel: ObservableObject {
     let emptyUser = User(name: "", avatar: "", description: "", website: "", nfts: [], rating: "", id: "")
     
     func loadData(_ nftIds: [String]) {
-        let nftsUsers$ = nftIds.map({ nftId in
+        
+        let nftsUsers$ = nftIds.map{ nftId in
             self.nftService
                 .getNFT(nftId)
                 .flatMap { nft in
@@ -56,7 +57,8 @@ class MyNFTListViewModel: ObservableObject {
                             (nft, user)
                         }
                 }
-        })
+                
+        }
         Publishers.MergeMany(nftsUsers$).collect()
             .zip(profileService.getProfile(id: "1"))
             .map { (nftUsers: [(NFT, User)], profile: Profile) in

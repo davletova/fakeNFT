@@ -9,13 +9,22 @@ import Foundation
 import SwiftUI
 import Combine
 
+struct NFTDisplayModel: Identifiable {
+    var nft: NFT
+    var isLike: Bool
+    var isOnOrder: Bool
+   
+    var id: String { nft.id }
+    
+    func getImageURLs() -> [URL] {
+        nft.images.compactMap { URL.fromRawString($0) }
+    }
+}
+
 class ListNFTViewModel: ObservableObject {
     private var nftService: NFTServiceProtocol
     private var profileService: ProfileServiceProtocol
     private var orderService: OrderServiceProtocol
-    
-    private var likes = Set<String>()
-    private var onOrder = Set<String>()
     
     private var subscriptions = Set<AnyCancellable>()
     
