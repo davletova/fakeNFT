@@ -22,64 +22,69 @@ struct ProfileView: View {
             VStack {
                 switch viewModel.state {
                 case .loaded:
-                    VStack(alignment: .leading) {
-                        HStack {
-                            LazyImage(url: viewModel.profile?.getAvatarURL()) { state in
-                                if let image = state.image {
-                                    image
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(width: 70, height: 70)
-                                        .clipShape(Circle())
-                                        .padding(.trailing, 16)
-                                } else if state.error != nil {
-                                    Color.red // Indicates an error
-                                } else {
-                                    Color.appLightGray
-                                        .frame(width: 70, height: 70)
-                                        .clipShape(Circle())
-                                        .padding(.trailing, 16)
+                    VStack {
+                        VStack(alignment: .leading) {
+                            HStack {
+                                LazyImage(url: viewModel.profile?.getAvatarURL()) { state in
+                                    if let image = state.image {
+                                        image
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(width: 70, height: 70)
+                                            .clipShape(Circle())
+                                            .padding(.trailing, 16)
+                                    } else if state.error != nil {
+                                        Color.red // Indicates an error
+                                    } else {
+                                        Color.appLightGray
+                                            .frame(width: 70, height: 70)
+                                            .clipShape(Circle())
+                                            .padding(.trailing, 16)
+                                    }
                                 }
+                                Text(viewModel.profile?.profile.name ?? "")
+                                    .font(.system(size: 22, weight: .bold))
+                                    .foregroundColor(.appBlack)
+                                Spacer()
                             }
-                            Text(viewModel.profile?.profile.name ?? "")
-                                .font(.system(size: 22, weight: .bold))
+                            .padding(.bottom, 20)
+//                            .padding(.horizontal, 16)
+                            Text(viewModel.profile?.profile.description ?? "")
+                                .font(.system(size: 13, weight: .regular))
                                 .foregroundColor(.appBlack)
-                            Spacer()
-                        }
-                        .padding(.bottom, 20)
-                        Text(viewModel.profile?.profile.description ?? "")
-                            .font(.system(size: 13, weight: .regular))
-                            .foregroundColor(.appBlack)
-                            .padding(.bottom, 60)
-                        VStack(spacing: 32) {
-                            NavigationLink(value: ProfileViewRoute.mynft) {
-                                HStack {
-                                    Text("Мои NFT (\(viewModel.profile?.profile.nfts.count ?? 0))")
-                                        .font(.system(size: 17, weight: .bold))
-                                        .foregroundColor(.appBlack)
-                                    Spacer()
-                                    Image(systemName: "chevron.right")
+                                .padding(.bottom, 60)
+//                                .padding(.horizontal, 16)
+                            VStack(spacing: 32) {
+                                NavigationLink(value: ProfileViewRoute.mynft) {
+                                    HStack {
+                                        Text("Мои NFT (\(viewModel.profile?.profile.nfts.count ?? 0))")
+                                            .font(.system(size: 17, weight: .bold))
+                                            .foregroundColor(.appBlack)
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                    }
                                 }
-                            }
-                            NavigationLink(value: ProfileViewRoute.favorites) {
-                                HStack {
-                                    Text("Избранные NFT (\(viewModel.profile?.profile.nfts.count ?? 0))")
-                                        .font(.system(size: 17, weight: .bold))
-                                        .foregroundColor(.appBlack)
-                                    Spacer()
-                                    Image(systemName: "chevron.right")
+                                NavigationLink(value: ProfileViewRoute.favorites) {
+                                    HStack {
+                                        Text("Избранные NFT (\(viewModel.profile?.profile.nfts.count ?? 0))")
+                                            .font(.system(size: 17, weight: .bold))
+                                            .foregroundColor(.appBlack)
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                    }
                                 }
-                            }
-                            NavigationLink(value: ProfileViewRoute.website) {
-                                HStack {
-                                    Text("О разработчике")
-                                        .font(.system(size: 17, weight: .bold))
-                                        .foregroundColor(.appBlack)
-                                    Spacer()
-                                    Image(systemName: "chevron.right")
+                                NavigationLink(value: ProfileViewRoute.website) {
+                                    HStack {
+                                        Text("О разработчике")
+                                            .font(.system(size: 17, weight: .bold))
+                                            .foregroundColor(.appBlack)
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                    }
                                 }
                             }
                         }
+                        .padding(.horizontal, 16)
                         Spacer()
                             .navigationDestination(for: ProfileViewRoute.self) { route in
                                 switch route {
@@ -92,7 +97,9 @@ struct ProfileView: View {
                                             orderService: OrderService()
                                         )
                                     )
-                                    .padding(.horizontal, -16)
+                                    .padding(.horizontal, 16)
+                                    .padding(.top, 36)
+                                    .navigationTitle("Избранные NFT")
                                 case .mynft:
                                     MyNFTListView(
                                         viewModel: MyNFTListViewModel(
@@ -102,9 +109,11 @@ struct ProfileView: View {
                                             userService: UserService()
                                         )
                                     )
+                                    .padding(.horizontal, 16)
+                                    .padding(.top, 36)
+                                    .navigationTitle("Мои NFT")
                                 case .website:
                                     WebView(url: viewModel.profile!.getWebsiteURL()!)
-                                        .ignoresSafeArea()
                                 }
                             }
                     }
@@ -138,7 +147,6 @@ struct ProfileView: View {
                 }
             }
         }
-        .padding(.horizontal, 16)
     }
 }
 
