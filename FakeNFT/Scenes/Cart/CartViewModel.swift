@@ -27,6 +27,8 @@ class CartViewModel: ObservableObject {
     @Published var cartNFTDisplayModels: [CartNFTDisplayModel] = []
     @Published var state: StateFoo
     
+    @Published var deleteNFT: CartNFTDisplayModel?
+    
     init(nftService: NFTService, orderService: OrderService) {
         self.nftService = nftService
         self.orderService = orderService

@@ -11,9 +11,11 @@ import NukeUI
 
 struct CartItemView: View {
     private var nft: CartNFTDisplayModel
+    private var viewModel: CartViewModel
     
-    init(nft: CartNFTDisplayModel) {
+    init(nft: CartNFTDisplayModel, viewVodel: CartViewModel) {
         self.nft = nft
+        self.viewModel = viewVodel
     }
     
     var body: some View {
@@ -50,8 +52,10 @@ struct CartItemView: View {
                     .foregroundColor(Color.appBlack)
             }
             Spacer()
-            Image("basketCross")
-                .frame(width: 40, height: 40)
+            Button (action: {self.viewModel.deleteNFT = nft}) {
+                Image("basketCross")
+                    .frame(width: 40, height: 40)
+            }
         }
     }
 }
@@ -74,6 +78,10 @@ struct CartItemView_Previews: PreviewProvider {
                     author: "23",
                     id: "32"
                 )
+            ),
+            viewVodel: CartViewModel(
+                nftService: NFTService(),
+                orderService: OrderService()
             )
         )
     }
