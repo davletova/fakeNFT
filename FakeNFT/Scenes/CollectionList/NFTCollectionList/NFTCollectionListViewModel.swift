@@ -1,0 +1,61 @@
+import Foundation
+import SwiftUI
+import Combine
+
+class ListNFTCollectionViewModel: ObservableObject {
+    private var nftService: NFTServiceProtocol
+    private var profileService: ProfileServiceProtocol
+    private var cartService: CartServiceProtocol
+    
+    private var subscriptions = Set<AnyCancellable>()
+    
+    @Published var nftDisplayModels: [NFTDisplayModel] = []
+    @Published var state: StateFoo
+    
+    init(nftIds: [Int], nftService: NFTServiceProtocol, profileService: ProfileServiceProtocol, cartService: CartServiceProtocol) {
+        self.nftService = nftService
+        self.profileService = profileService
+        self.cartService = cartService
+        
+        self.state = .loading
+        self.loadData(nftIds)
+    }
+    
+    func loadData(_ nftIds: [Int]) {
+        let likes$ = profileService.getProfileLikeNFTs()
+        let cart$ = cartService.getCart()
+        let nfts$ = Publishers.MergeMany(nftIds.map(nftService.getNFT)).collect()
+                
+        nfts$
+            .sink { completion in
+                if case .failure(let error) = completion {
+                    print("----- getProfileLikeNFTs failed: \(error)")
+                }
+            } receiveValue: { cartLines in
+                print("----- getProfileLikeNFTs success: \(cartLines.count)")
+            }
+            .store(in: &subscriptions)
+        
+        
+        Publishers.Zip3(likes$, cart$, nfts$)
+            .map { likes, cart, nfts in
+                let likesNftIds = Set(likes.map { $0.id } )
+                let cartNftIds = Set(cart.map { $0.nftId } )
+                
+                return nfts.map { nft in
+                    NFTDisplayModel(nft: nft, isLike: likesNftIds.contains(nft.id), isOnOrder: cartNftIds.contains(nft.id))
+                }
+            }
+            .mapError { [weak self] err in
+                self?.state = .failed(err)
+                return err
+            }
+            .replaceError(with: [NFTDisplayModel]())
+        //            .assign(to: &$nfts)
+            .sink { [weak self] nfts in
+                self?.nftDisplayModels = nfts
+                self?.state = .loaded
+            }
+            .store(in: &subscriptions)
+    }
+}

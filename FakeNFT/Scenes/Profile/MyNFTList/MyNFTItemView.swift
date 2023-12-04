@@ -75,8 +75,8 @@ struct MyNFTItemView_Previews: PreviewProvider {
                     rating: 3,
                     description: "Персиковый — как облака над закатным солнцем в океане. В этой коллекции совмещены трогательная нежность и живая игривость сказочных зефирных зверей.",
                     price: 56,
-                    author: "23",
-                    id: "32"
+                    author: 23,
+                    id: 32
                 ),
                 isLike: true,
                 author: "Alex Smith"

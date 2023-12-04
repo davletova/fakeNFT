@@ -20,7 +20,7 @@ struct ListUsersContainer: View {
                     LazyVStack {
                         ForEach(viewModel.users) { (userVM: UserDisplayModel) in
                             //TODO: обработать кейс когда url == nil
-                            UserItemView(number: userVM.index, name: userVM.user.name, avatarURL: userVM.getAvatarURL()!, position: userVM.user.rating)
+                            UserItemView(number: userVM.index, name: userVM.user.name, avatarURL: userVM.getAvatarURL()!, position: userVM.user.rating.description)
                                 .onAppear {
                                     if viewModel.users.last == userVM {
                                         viewModel.fetchNextPageIfPossible()

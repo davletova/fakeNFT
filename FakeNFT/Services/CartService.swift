@@ -1,5 +1,5 @@
 //
-//  NFTService.swift
+//  OrderService.swift
 //  FakeNFT
 //
 //  Created by Алия Давлетова on 15.11.2023.
@@ -8,47 +8,49 @@
 import Foundation
 import Combine
 
-enum NFTServiceError : Error {
+enum CartServiceError: Error {
     case invalidURL
-    case invalidResponse
-    case requestFailed(Int)
 }
 
-protocol NFTServiceProtocol {
-    func getNFT(_ id: Int) -> AnyPublisher<NFT, Error>
-    func likeNft(_ id: Int) -> AnyPublisher<Void, Error>
-    func unlikeNft(_ id: Int) -> AnyPublisher<Void, Error>
+protocol CartServiceProtocol {
+    func getCart() -> AnyPublisher<[CartLine], Error>
+    func addNft(_ id: Int) -> AnyPublisher<Void, Error>
+    func deleteNft(_ id: Int) -> AnyPublisher<Void, Error>
 }
 
-
-class NFTService: NFTServiceProtocol {
-    let getNFTPath = "/api/v1/nfts"
+final class CartService: CartServiceProtocol {
+    private var getCartPath = "/api/v1/cart"
+    private var addNftPath = "/api/v1/cart"
+    private var deleteNftPath = "/api/v1/cart"
     
-    func getNFT(_ id: Int) -> AnyPublisher<NFT, Error> {
+    func getCart() -> AnyPublisher<[CartLine], Error> {
         guard let req = URLRequest.makeHTTPRequest(
             baseUrl: baseURL,
-            path: getNFTPath + "/" + id.description,
+            //TODO: подумать что тут за id должно быть
+            path: getCartPath,
             method: HTTPMehtod.get
         ) else {
-            return Fail(error: NFTServiceError.invalidURL)
+            return Fail(error: CartServiceError.invalidURL)
                 .eraseToAnyPublisher()
         }
         
         return URLSession.shared
             .dataTaskPublisher(for: req)
             .map(\.data)
-            .decode(type: NFT.self, decoder: JSONDecoder())
+            .decode(type: [CartLine].self, decoder: JSONDecoder())
             .receive(on: RunLoop.main)
             .eraseToAnyPublisher()
     }
     
-    func likeNft(_ id: Int) -> AnyPublisher<Void, Error> {
+    func addNft(_ id: Int) -> AnyPublisher<Void, Error> {
         guard let req = URLRequest.makeHTTPRequest(
             baseUrl: baseURL,
-            path: "api/v1/nfts/\(id)/like",
-            method: HTTPMehtod.post
+            //TODO: подумать что тут за id должно быть
+            path: addNftPath,
+            method: HTTPMehtod.put,
+            body: CartLine(nftId: id)
         ) else {
-            return Fail(error: NFTServiceError.invalidURL)
+            return Fail(error: CartServiceError.invalidURL)
                 .eraseToAnyPublisher()
         }
         
@@ -60,6 +62,7 @@ class NFTService: NFTServiceProtocol {
                 }
 
                 guard (200...299).contains(httpResponse.statusCode) else {
+                    print("----- \(String(data: data, encoding: .utf8))")
                     throw NFTServiceError.requestFailed(httpResponse.statusCode)
                 }
 
@@ -73,13 +76,15 @@ class NFTService: NFTServiceProtocol {
             .eraseToAnyPublisher()
     }
     
-    func unlikeNft(_ id: Int) -> AnyPublisher<Void, Error> {
+    func deleteNft(_ id: Int) -> AnyPublisher<Void, Error> {
         guard let req = URLRequest.makeHTTPRequest(
             baseUrl: baseURL,
-            path: "api/v1/nfts/\(id)/unlike",
-            method: HTTPMehtod.post
+            //TODO: подумать что тут за id должно быть
+            path: deleteNftPath,
+            method: HTTPMehtod.delete,
+            body: CartLine(nftId: id)
         ) else {
-            return Fail(error: NFTServiceError.invalidURL)
+            return Fail(error: CartServiceError.invalidURL)
                 .eraseToAnyPublisher()
         }
         

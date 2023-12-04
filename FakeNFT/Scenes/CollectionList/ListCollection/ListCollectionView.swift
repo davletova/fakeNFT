@@ -8,8 +8,8 @@
 import Foundation
 import SwiftUI
 
-struct ListCollectionsView: View {
-    @ObservedObject var viewModel: ListCollectionsViewModel
+struct CollectionListView: View {
+    @ObservedObject var viewModel: CollectionListViewModel
     
     var body: some View {
         NavigationStack {
@@ -27,7 +27,7 @@ struct ListCollectionsView: View {
                             }
                         }
                         .navigationDestination(for: CollectionDisplayModel.self) { collectionDisplayModel in
-                            CollectionView(collection: collectionDisplayModel.collection)
+                            CollectionDetailsView(collection: collectionDisplayModel.collection)
                         }
                     }
                 case .loading:

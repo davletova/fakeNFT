@@ -94,6 +94,6 @@ struct CartView: View {
 
 struct CartView_Previews: PreviewProvider {
     static var previews: some View {
-        CartView(viewModel: CartViewModel(nftService: NFTService(), orderService: OrderService()))
+        CartView(viewModel: CartViewModel(nftService: NFTService(), cartService: CartService()))
     }
 }

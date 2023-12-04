@@ -57,7 +57,7 @@ struct ProfileView: View {
                             VStack(spacing: 32) {
                                 NavigationLink(value: ProfileViewRoute.mynft) {
                                     HStack {
-                                        Text("Мои NFT (\(viewModel.profile?.profile.nfts.count ?? 0))")
+                                        Text("Мои NFT (\(viewModel.profile?.nfts.count ?? 0))")
                                             .font(.system(size: 17, weight: .bold))
                                             .foregroundColor(.appBlack)
                                         Spacer()
@@ -66,7 +66,7 @@ struct ProfileView: View {
                                 }
                                 NavigationLink(value: ProfileViewRoute.favorites) {
                                     HStack {
-                                        Text("Избранные NFT (\(viewModel.profile?.profile.nfts.count ?? 0))")
+                                        Text("Избранные NFT (\(viewModel.profile?.likes.count ?? 0))")
                                             .font(.system(size: 17, weight: .bold))
                                             .foregroundColor(.appBlack)
                                         Spacer()
@@ -89,12 +89,11 @@ struct ProfileView: View {
                             .navigationDestination(for: ProfileViewRoute.self) { route in
                                 switch route {
                                 case .favorites:
-                                    ListNFTView(
-                                        viewModel: ListNFTViewModel(
-                                            nfts: viewModel.profile?.profile.likes ?? [],
+                                    FavoriteNFTListView(
+                                        viewModel: FavoriteNFTListViewModel(
                                             nftService: NFTService(),
                                             profileService: ProfileService(),
-                                            orderService: OrderService()
+                                            orderService: CartService()
                                         )
                                     )
                                     .padding(.horizontal, 16)
@@ -103,7 +102,6 @@ struct ProfileView: View {
                                 case .mynft:
                                     MyNFTListView(
                                         viewModel: MyNFTListViewModel(
-                                            nftIDs: viewModel.profile?.profile.nfts ?? [],
                                             nftService: NFTService(),
                                             profileService: ProfileService(),
                                             userService: UserService()

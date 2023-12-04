@@ -13,16 +13,20 @@ enum ProfileServiceError: Error {
 }
 
 protocol ProfileServiceProtocol {
-    func getProfile(id: String) -> AnyPublisher<Profile, Error>
+    func getProfile() -> AnyPublisher<Profile, Error>
+    func getProfileNFTs() -> AnyPublisher<[NFT], Error>
+    func getProfileLikeNFTs() -> AnyPublisher<[NFT], Error>
 }
 
 final class ProfileService: ProfileServiceProtocol {
     let getUserPath = "/api/v1/profile"
+    let getProfileNFTPath = "api/v1/profile/nfts"
+    let getProfileLikeNFTPath = "api/v1/profile/likes"
     
-    func getProfile(id: String) -> AnyPublisher<Profile, Error> {
+    func getProfile() -> AnyPublisher<Profile, Error> {
         guard let req = URLRequest.makeHTTPRequest(
             baseUrl: baseURL,
-            path: getUserPath + "/" + id,
+            path: getUserPath,
             method: HTTPMehtod.get
         ) else {
             return Fail(error: ProfileServiceError.invalidURL)
@@ -33,6 +37,42 @@ final class ProfileService: ProfileServiceProtocol {
             .dataTaskPublisher(for: req)
             .map(\.data)
             .decode(type: Profile.self, decoder: JSONDecoder())
+            .receive(on: RunLoop.main)
+            .eraseToAnyPublisher()
+    }
+    
+    func getProfileNFTs() -> AnyPublisher<[NFT], Error> {
+        guard let req = URLRequest.makeHTTPRequest(
+            baseUrl: baseURL,
+            path: getProfileNFTPath,
+            method: HTTPMehtod.get
+        ) else {
+            return Fail(error: ProfileServiceError.invalidURL)
+                .eraseToAnyPublisher()
+        }
+        
+        return URLSession.shared
+            .dataTaskPublisher(for: req)
+            .map(\.data)
+            .decode(type: [NFT].self, decoder: JSONDecoder())
+            .receive(on: RunLoop.main)
+            .eraseToAnyPublisher()
+    }
+    
+    func getProfileLikeNFTs() -> AnyPublisher<[NFT], Error> {
+        guard let req = URLRequest.makeHTTPRequest(
+            baseUrl: baseURL,
+            path: getProfileLikeNFTPath,
+            method: HTTPMehtod.get
+        ) else {
+            return Fail(error: ProfileServiceError.invalidURL)
+                .eraseToAnyPublisher()
+        }
+        
+        return URLSession.shared
+            .dataTaskPublisher(for: req)
+            .map(\.data)
+            .decode(type: [NFT].self, decoder: JSONDecoder())
             .receive(on: RunLoop.main)
             .eraseToAnyPublisher()
     }

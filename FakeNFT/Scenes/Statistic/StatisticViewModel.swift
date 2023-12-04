@@ -28,7 +28,7 @@ struct UserDisplayModel: Equatable, Identifiable {
     var index: Int
     var user: User
     
-    var id: String {
+    var id: Int {
         user.id
     }
     

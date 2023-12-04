@@ -16,8 +16,8 @@ protocol CollectionServiceProtocol {
     func listCollections(
         perPage: Int,
         nextPage: Int,
-        sortParameter: ListCollectionsSortParameter,
-        sortOrder: ListCollectionsSortOrder
+        sortParameter: CollectionListSortParameter,
+        sortOrder: CollectionListSortOrder
     ) -> AnyPublisher<[Collection], Error>
     
     func getCollection(id: String) -> AnyPublisher<Collection, Error>
@@ -30,8 +30,8 @@ class CollectionService: CollectionServiceProtocol {
     func listCollections(
         perPage: Int,
         nextPage: Int,
-        sortParameter: ListCollectionsSortParameter,
-        sortOrder: ListCollectionsSortOrder
+        sortParameter: CollectionListSortParameter,
+        sortOrder: CollectionListSortOrder
     ) -> AnyPublisher<[Collection], Error> {
         let queryItems: [URLQueryItem] = [
             URLQueryItem(name: "sortBy", value: sortParameter.rawValue),

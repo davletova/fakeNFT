@@ -5,6 +5,7 @@
 //  Created by Алия Давлетова on 12.11.2023.
 //
 
+import Combine
 import Foundation
 import SwiftUI
 
@@ -18,12 +19,12 @@ struct TabBarView: View {
                     selectedTab == 0 ? Label("Профиль", image: "profileActive") : Label("Профиль", image: "profileNoActive")
                 }
                 .tag(0)
-            ListCollectionsView(viewModel: ListCollectionsViewModel(service: CollectionService()))
+            CollectionListView(viewModel: CollectionListViewModel(service: CollectionService()))
                 .tabItem {
                     selectedTab == 1 ? Label("Каталог", image: "catalogActive") : Label("Каталог", image: "catalogNoActive")
                 }
                 .tag(1)
-            CartView(viewModel: CartViewModel(nftService: NFTService(), orderService: OrderService()))
+            CartView(viewModel: CartViewModel(nftService: NFTService(), cartService: CartService()))
                 .tabItem {
                     selectedTab == 2 ? Label("Корзина", image: "basketActive") : Label("Корзина", image: "basketNoActive")
                 }

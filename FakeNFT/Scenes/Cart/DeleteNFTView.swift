@@ -42,7 +42,8 @@ struct DeleteNFTView: View {
                     .padding(.bottom, 20)
                 HStack {
                     Button("Удалить") {
-                        
+                        viewModel.deleteItem(item: nft)
+                        viewModel.deleteNFT = nil
                     }
                     .frame(width: 127, height: 44)
                     .background(Color.appBlack)
@@ -50,7 +51,7 @@ struct DeleteNFTView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .foregroundStyle(Color.appRed)
                     Button("Вернуться") {
-                        
+                        viewModel.deleteNFT = nil
                     }
                     .frame(width: 127, height: 44)
                     .background(Color.appBlack)
@@ -68,7 +69,7 @@ struct DeleteNFTView_Previews: PreviewProvider {
         DeleteNFTView(
             viewModel: CartViewModel(
                 nftService: NFTService(),
-                orderService: OrderService()),
+                cartService: CartService()),
             nft: CartNFTDisplayModel(
                 nft: NFT(
                     createdAt: "",
@@ -81,8 +82,8 @@ struct DeleteNFTView_Previews: PreviewProvider {
                     rating: 6,
                     description: "Персиковый — как облака над закатным солнцем в океане. В этой коллекции совмещены трогательная нежность и живая игривость сказочных зефирных зверей.",
                     price: 56,
-                    author: "23",
-                    id: "32"
+                    author: 23,
+                    id: 32
                 )
             )
         )

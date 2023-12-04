@@ -9,11 +9,11 @@ import Foundation
 import SwiftUI
 import Kingfisher
 
-struct CollectionView: View {
-    private var viewModel: CollectionViewModel
+struct CollectionDetailsView: View {
+    @ObservedObject var viewModel: CollectionDetailsViewModel
     
     init(collection: Collection) {
-        self.viewModel = CollectionViewModel(collection: collection)
+        self.viewModel = CollectionDetailsViewModel(collection: collection, userService: UserService())
     }
     
     var body: some View {
@@ -36,7 +36,7 @@ struct CollectionView: View {
                         Text("Автор коллекции: ")
                             .font(.system(size: 13, weight: .regular))
                             .foregroundStyle(Color.appBlack)
-                        Text(viewModel.collection.collection.author)
+                        Text(viewModel.author)
                             .font(.system(size: 15, weight: .regular))
                             .foregroundStyle(Color.appBlue)
                         Spacer()
@@ -49,12 +49,12 @@ struct CollectionView: View {
                 }
                 .padding(.bottom, 24)
                 
-                ListNFTView(
-                    viewModel: ListNFTViewModel(
-                        nfts: viewModel.collection.collection.nfts,
+                ListNFTCollectionView(
+                    viewModel: ListNFTCollectionViewModel(
+                        nftIds: viewModel.collection.collection.nfts,
                         nftService: NFTService(),
                         profileService: ProfileService(),
-                        orderService: OrderService()
+                        cartService: CartService()
                     )
                 )
                 
@@ -67,14 +67,14 @@ struct CollectionView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        CollectionView(
+        CollectionDetailsView(
             collection: Collection(
                 name: "Peach",
                 cover: "https://code.s3.yandex.net/Mobile/iOS/NFT/Обложки_коллекций/Beige.png",
-                nfts: ["1", "2", "3", "4"],
+                nfts: [1, 2, 3, 4],
                 description: "Персиковый — как облака над закатным солнцем в океане. В этой коллекции совмещены трогательная нежность и живая игривость сказочных зефирных зверей.",
-                author: "John Doe",
-                id: "1"
+                author: 5,
+                id: 1
             )
         )
     }

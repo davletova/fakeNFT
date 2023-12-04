@@ -11,6 +11,9 @@ import Combine
 struct ProfileDisplayModel {
     var profile: Profile
     
+    var nfts: [NFT]
+    var likes: [NFT]
+    
     func getAvatarURL() -> URL? {
         URL.fromRawString(profile.avatar)
     }
@@ -34,11 +37,13 @@ class ProfileViewModel: ObservableObject {
     }
     
     func loadData() {
-        //TODO: надо подставить id текущего пользователя
-        service.getProfile(id: "1")
-            .print("------", to:  nil)
-            .map { profile in
-                ProfileDisplayModel(profile: profile)
+        let profile$ = service.getProfile()
+        let nfts$ = service.getProfileNFTs()
+        let likes$ = service.getProfileLikeNFTs()
+        
+        Publishers.Zip3(profile$, nfts$, likes$)
+            .map { profile, nfts, likes in
+                ProfileDisplayModel(profile: profile, nfts: nfts, likes: likes)
             }
             .mapError { [weak self] err in
                     self?.state = .failed(err)

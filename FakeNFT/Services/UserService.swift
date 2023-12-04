@@ -20,7 +20,7 @@ protocol UserServiceProtocol {
         sortOrder: UsersSortOrder
     ) -> AnyPublisher<[User], Error>
     
-    func getUser(id: String) -> AnyPublisher<User, Error>
+    func getUser(id: Int) -> AnyPublisher<User, Error>
 }
 
 final class UserService: UserServiceProtocol {
@@ -57,10 +57,10 @@ final class UserService: UserServiceProtocol {
             .eraseToAnyPublisher()
     }
     
-    func getUser(id: String) -> AnyPublisher<User, Error> {
+    func getUser(id: Int) -> AnyPublisher<User, Error> {
         guard let req = URLRequest.makeHTTPRequest(
             baseUrl: baseURL,
-            path: getUserPath + "/" + id,
+            path: "\(getUserPath)/\(id)",
             method: HTTPMehtod.get
         ) else {
             return Fail(error: UserServiceError.invalidURL)

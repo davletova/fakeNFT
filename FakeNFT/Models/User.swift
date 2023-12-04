@@ -12,7 +12,6 @@ struct User: Decodable, Equatable {
     var avatar: String
     var description: String
     var website: String
-    var nfts: [String]
-    var rating: String
-    var id: String
+    var rating: Int
+    var id: Int
 }

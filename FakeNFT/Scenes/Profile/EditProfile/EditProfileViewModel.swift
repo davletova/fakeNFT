@@ -15,7 +15,8 @@ class EditProfileViewModel: ObservableObject {
     @Published var website: String
     
     init(profile: Profile) {
-        self.profile = ProfileDisplayModel(profile: profile)
+        //TODO: nfts и likes здесь не нужны
+        self.profile = ProfileDisplayModel(profile: profile, nfts: [], likes: [])
         self.name = profile.name
         self.description = profile.description
         self.website = profile.website

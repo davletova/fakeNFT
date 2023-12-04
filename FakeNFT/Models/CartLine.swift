@@ -7,7 +7,6 @@
 
 import Foundation
 
-struct Order: Decodable {
-    var nfts: [String]
-    var id: String
+struct CartLine: Codable {
+    var nftId: Int
 }

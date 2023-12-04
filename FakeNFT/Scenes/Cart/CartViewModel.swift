@@ -11,7 +11,7 @@ import Combine
 struct CartNFTDisplayModel: Identifiable {
     var nft: NFT
     
-    var id: String { nft.id }
+    var id: Int { nft.id }
     
     func getImageURLs() -> [URL] {
         nft.images.compactMap { URL.fromRawString($0) }
@@ -20,7 +20,7 @@ struct CartNFTDisplayModel: Identifiable {
 
 class CartViewModel: ObservableObject {
     private var nftService: NFTService
-    private var orderService: OrderService
+    private var cartService: CartService
     
     private var subscriptions = Set<AnyCancellable>()
     
@@ -29,25 +29,36 @@ class CartViewModel: ObservableObject {
     
     @Published var deleteNFT: CartNFTDisplayModel?
     
-    init(nftService: NFTService, orderService: OrderService) {
+    init(nftService: NFTService, cartService: CartService) {
         self.nftService = nftService
-        self.orderService = orderService
+        self.cartService = cartService
         
         self.state = .loading
         loadData()
     }
         
     func loadData() {
-        orderService.getOrder(id: "1")
-            .flatMap { (order: Order) in
-                Publishers.MergeMany(order.nfts.map(self.nftService.getNFT)).collect()
+        cartService.getCart()
+            .flatMap { (cartLines: [CartLine]) in
+                Publishers.MergeMany(cartLines.map {self.nftService.getNFT($0.nftId) }).collect()
             }
             .map { $0.map(CartNFTDisplayModel.init) }
             .replaceError(with: [])
-            .sink { nfts in
-                self.state = .loaded
-                self.cartNFTDisplayModels = nfts
-            }
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    print("Error: \(error)")
+                }
+            }, receiveValue: {[weak self] nfts in
+                self?.state = .loaded
+                self?.cartNFTDisplayModels = nfts
+            })
             .store(in: &subscriptions)
+    }
+    
+    func deleteItem(item: CartNFTDisplayModel) {
+        print("delete")
     }
 }

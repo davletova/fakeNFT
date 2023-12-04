@@ -52,7 +52,7 @@ struct CartItemView: View {
                     .foregroundColor(Color.appBlack)
             }
             Spacer()
-            Button (action: {self.viewModel.deleteNFT = nft}) {
+            Button (action: { self.viewModel.deleteNFT = nft }) {
                 Image("basketCross")
                     .frame(width: 40, height: 40)
             }
@@ -75,13 +75,13 @@ struct CartItemView_Previews: PreviewProvider {
                     rating: 6,
                     description: "Персиковый — как облака над закатным солнцем в океане. В этой коллекции совмещены трогательная нежность и живая игривость сказочных зефирных зверей.",
                     price: 56,
-                    author: "23",
-                    id: "32"
+                    author: 23,
+                    id: 32
                 )
             ),
             viewVodel: CartViewModel(
                 nftService: NFTService(),
-                orderService: OrderService()
+                cartService: CartService()
             )
         )
     }

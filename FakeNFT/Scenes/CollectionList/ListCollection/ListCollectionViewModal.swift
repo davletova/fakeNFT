@@ -8,13 +8,13 @@
 import Foundation
 import Combine
 
-enum ListCollectionsSortParameter: String {
+enum CollectionListSortParameter: String {
     case byName = "name"
     case byAuthor = "author"
     case byID = "id"
 }
 
-enum ListCollectionsSortOrder: String {
+enum CollectionListSortOrder: String {
     case asc = "asc"
     case desc = "desc"
 }
@@ -22,7 +22,7 @@ enum ListCollectionsSortOrder: String {
 struct CollectionDisplayModel: Identifiable, Equatable, Hashable {
     var collection: Collection
     
-    var id: String {
+    var id: Int {
         collection.id
     }
     
@@ -31,7 +31,7 @@ struct CollectionDisplayModel: Identifiable, Equatable, Hashable {
     }
 }
 
-class ListCollectionsViewModel: ObservableObject {
+class CollectionListViewModel: ObservableObject {
     private var service: CollectionServiceProtocol
     private let collectionsPerPage = 20
     private var subscriptions = Set<AnyCancellable>()
@@ -42,8 +42,8 @@ class ListCollectionsViewModel: ObservableObject {
     var page = 1
     var canLoadNextPage = true
 
-    var sortParameter: ListCollectionsSortParameter = .byName
-    var sortOrder: ListCollectionsSortOrder = .asc
+    var sortParameter: CollectionListSortParameter = .byName
+    var sortOrder: CollectionListSortOrder = .asc
     
     init(service: CollectionServiceProtocol) {
         self.service = service

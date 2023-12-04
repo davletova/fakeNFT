@@ -10,9 +10,9 @@ import Foundation
 struct Collection: Codable, Hashable {
     var name: String
     var cover: String
-    var nfts: [String]
+    var nfts: [Int]
     var description: String
-    var author: String
-    var id: String
+    var author: Int
+    var id: Int
 }
 

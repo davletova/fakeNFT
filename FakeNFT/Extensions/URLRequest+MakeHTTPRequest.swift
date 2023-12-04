@@ -47,14 +47,16 @@ extension URLRequest {
  
         var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData)
         request.httpMethod = method.rawValue
-        if let body = body {
+        if let body {
             guard let data = try? JSONEncoder().encode(body) else {
                 assertionFailure("failed to encode request body")
                 return nil
             }
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             request.httpBody = data
         }
         
+        request.setValue("Bearer 123", forHTTPHeaderField: "Authorization")
         request.timeoutInterval = 10
         
         return request

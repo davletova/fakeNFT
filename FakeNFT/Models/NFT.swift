@@ -14,6 +14,6 @@ struct NFT: Decodable {
     var rating: Int
     var description: String
     var price: Float
-    var author: String
-    var id: String
+    var author: Int
+    var id: Int
 }

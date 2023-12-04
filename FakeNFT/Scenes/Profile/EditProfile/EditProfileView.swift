@@ -105,9 +105,7 @@ struct EditProfileView_Previews: PreviewProvider {
                     avatar: "https://code.s3.yandex.net/landings-v2-ios-developer/space.PNG",
                     description: "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.",
                     website: "https://practicum.yandex.ru/ios-developer",
-                    nfts: ["68","69","71","72","73","74","75","76","77","78","79","80","81"],
-                    likes: ["5","13","19","26","27","33","35","39","41","47","56","66"],
-                    id: "1"
+                    id: 1
                 )
             )
         )
