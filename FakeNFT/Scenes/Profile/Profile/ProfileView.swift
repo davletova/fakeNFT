@@ -136,10 +136,11 @@ struct ProfileView: View {
                 }
                 .popover(isPresented: $showingPopover) {
                     EditProfileView(
-                        viewModel: EditProfileViewModel(
-                            profile: EditProfileDisplayModel(profile: viewModel.profile!.profile),
-                            service: ProfileService()
-                        )
+//                        viewModel: EditProfileViewModel(
+//                            profile: EditProfileDisplayModel(profile: viewModel.profile!.profile),
+//                            service: ProfileService()
+//                        )
+                        viewModel: viewModel
                     )
                 }
             }

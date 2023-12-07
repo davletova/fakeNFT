@@ -10,11 +10,11 @@ import SwiftUI
 import NukeUI
 
 struct EditProfileView: View {
-    @ObservedObject var viewModel: EditProfileViewModel
+    @ObservedObject var viewModel: ProfileViewModel
     
     @Environment(\.dismiss) var dismiss
     
-    init(viewModel: EditProfileViewModel) {
+    init(viewModel: ProfileViewModel) {
         self.viewModel = viewModel
     }
     
@@ -22,7 +22,7 @@ struct EditProfileView: View {
         NavigationStack {
             VStack {
                 ZStack {
-                    LazyImage(url: viewModel.editProfileDisplayModel.getAvatarURL()) { state in
+                    LazyImage(url: viewModel.profile!.getAvatarURL()) { state in
                         if let image = state.image {
                             image
                                 .resizable()
@@ -72,7 +72,7 @@ struct EditProfileView: View {
                     Text("Описание")
                         .font(.system(size: 22, weight: .bold))
                         .foregroundColor(Color.appBlack)
-                    TextField("Введите описание", text: $viewModel.editProfileDisplayModel.profile.description, axis: .vertical)
+                    TextField("Введите описание", text: $viewModel.desc, axis: .vertical)
                         .font(.system(size: 17, weight: .regular))
                         .padding(16)
                         .frame(minHeight: 50)
@@ -83,7 +83,7 @@ struct EditProfileView: View {
                     Text("Сайт")
                         .font(.system(size: 22, weight: .bold))
                         .foregroundColor(Color.appBlack)
-                    TextField("Введите сайт", text: $viewModel.editProfileDisplayModel.profile.website, axis: .vertical)
+                    TextField("Введите сайт", text: $viewModel.website, axis: .vertical)
                         .font(.system(size: 17, weight: .regular))
                         .padding(16)
                         .frame(minHeight: 50)
@@ -94,8 +94,7 @@ struct EditProfileView: View {
             .padding(.horizontal)
             .toolbar {
                 Button {
-//                    viewModel.updateProfile()
-//                    showingPopover = false
+                    viewModel.updateProfile()
                     dismiss()
                 } label: {
                     Image(systemName: "xmark")

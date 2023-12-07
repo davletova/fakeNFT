@@ -29,6 +29,14 @@ class EditProfileViewModel: ObservableObject {
     
     private var service: ProfileServiceProtocol
     
+    var isUserNameValidPublisher: AnyPublisher<Bool, Never> {
+        $name
+            .map { name in
+                return name.count > 0
+            }
+            .eraseToAnyPublisher()
+    }
+    
     init(profile: EditProfileDisplayModel, service: ProfileServiceProtocol) {
         self.editProfileDisplayModel = profile
         self.name = profile.profile.name
@@ -38,16 +46,6 @@ class EditProfileViewModel: ObservableObject {
             .receive(on: RunLoop.main)
             .assign(to: \.nameIsValid, on: self)
             .store(in: &publishers)
-    }
-}
-
-extension EditProfileViewModel {
-    var isUserNameValidPublisher: AnyPublisher<Bool, Never> {
-        $name
-            .map { name in
-                return name.count > 0
-            }
-            .eraseToAnyPublisher()
     }
     
     func updateProfile() {
@@ -69,3 +67,4 @@ extension EditProfileViewModel {
             .store(in: &publishers)
     }
 }
+
