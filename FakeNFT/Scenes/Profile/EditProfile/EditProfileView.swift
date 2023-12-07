@@ -11,7 +11,7 @@ import NukeUI
 
 struct EditProfileView: View {
     @ObservedObject var viewModel: EditProfileViewModel
-   
+    
     @Environment(\.dismiss) var dismiss
     
     init(viewModel: EditProfileViewModel) {
@@ -22,7 +22,7 @@ struct EditProfileView: View {
         NavigationStack {
             VStack {
                 ZStack {
-                    LazyImage(url: viewModel.profile.getAvatarURL()) { state in
+                    LazyImage(url: viewModel.editProfileDisplayModel.getAvatarURL()) { state in
                         if let image = state.image {
                             image
                                 .resizable()
@@ -53,18 +53,26 @@ struct EditProfileView: View {
                     Text("Имя")
                         .font(.system(size: 22, weight: .bold))
                         .foregroundColor(Color.appBlack)
-                    TextField("Введите свое имя", text: $viewModel.name)
+                    TextField(
+                        "",
+                        text: $viewModel.name,
+                        prompt: Text("Не должно быть пустым")
+                            .foregroundColor(Color.appRed.opacity(0.8))
+                            .font(.system(size: 14, weight: .regular))
+                            )
                         .font(.system(size: 17, weight: .regular))
                         .padding(16)
                         .frame(minHeight: 50)
                         .background(Color.appLightGray)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .overlay(RoundedRectangle(cornerRadius: 12)
+                            .stroke(viewModel.nameIsValid ? Color.clear : Color.appRed))
                 }
                 VStack(alignment: .leading) {
                     Text("Описание")
                         .font(.system(size: 22, weight: .bold))
                         .foregroundColor(Color.appBlack)
-                    TextField("Введите описание", text: $viewModel.description, axis: .vertical)
+                    TextField("Введите описание", text: $viewModel.editProfileDisplayModel.profile.description, axis: .vertical)
                         .font(.system(size: 17, weight: .regular))
                         .padding(16)
                         .frame(minHeight: 50)
@@ -75,7 +83,7 @@ struct EditProfileView: View {
                     Text("Сайт")
                         .font(.system(size: 22, weight: .bold))
                         .foregroundColor(Color.appBlack)
-                    TextField("Введите сайт", text: $viewModel.website, axis: .vertical)
+                    TextField("Введите сайт", text: $viewModel.editProfileDisplayModel.profile.website, axis: .vertical)
                         .font(.system(size: 17, weight: .regular))
                         .padding(16)
                         .frame(minHeight: 50)
@@ -86,28 +94,36 @@ struct EditProfileView: View {
             .padding(.horizontal)
             .toolbar {
                 Button {
+//                    viewModel.updateProfile()
+//                    showingPopover = false
                     dismiss()
                 } label: {
                     Image(systemName: "xmark")
                         .foregroundColor(Color.appBlack)
                 }
+                .disabled(!viewModel.nameIsValid)
             }
         }
     }
 }
 
-struct EditProfileView_Previews: PreviewProvider {
-    static var previews: some View {
-        EditProfileView(
-            viewModel: EditProfileViewModel(
-                profile: Profile(
-                    name: "Alex Swensen",
-                    avatar: "https://code.s3.yandex.net/landings-v2-ios-developer/space.PNG",
-                    description: "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.",
-                    website: "https://practicum.yandex.ru/ios-developer",
-                    id: 1
-                )
-            )
-        )
-    }
-}
+//struct EditProfileView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        EditProfileView(
+//            viewModel: EditProfileViewModel(
+//                profile: ProfileDisplayModel(
+//                    profile: Profile(
+//                        name: "Alex Swensen",
+//                        avatar: "https://code.s3.yandex.net/landings-v2-ios-developer/space.PNG",
+//                        description: "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.",
+//                        website: "https://practicum.yandex.ru/ios-developer",
+//                        id: 1
+//                    ),
+//                    nfts: [],
+//                    likes:[]
+//                ),
+//                service: ProfileService()
+//            )
+//        )
+//    }
+//}

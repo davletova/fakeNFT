@@ -49,6 +49,7 @@ final class UserService: UserServiceProtocol {
             return Fail(error: UserServiceError.invalidURL)
                 .eraseToAnyPublisher()
         }
+        
         return URLSession.shared
             .dataTaskPublisher(for: req)
             .map(\.data)

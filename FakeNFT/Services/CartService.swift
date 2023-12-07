@@ -62,7 +62,6 @@ final class CartService: CartServiceProtocol {
                 }
 
                 guard (200...299).contains(httpResponse.statusCode) else {
-                    print("----- \(String(data: data, encoding: .utf8))")
                     throw NFTServiceError.requestFailed(httpResponse.statusCode)
                 }
 

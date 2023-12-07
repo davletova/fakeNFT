@@ -33,7 +33,6 @@ struct CartItemView: View {
                 } else {
                     Color.appLightGray
                         .frame(width: 70, height: 70)
-                        .clipShape(Circle())
                         .padding(.trailing, 16)
                 }
             }

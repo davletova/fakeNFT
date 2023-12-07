@@ -8,6 +8,10 @@
 import Foundation
 import SwiftUI
 
+enum CartViewRoute {
+    case pay
+}
+
 struct CartView: View {
     @ObservedObject var viewModel: CartViewModel
     @State private var isConfirming = false
@@ -53,13 +57,19 @@ struct CartView: View {
                                         .foregroundStyle(Color.appGreen)
                                 }
                                 .padding(.trailing, 24)
-                                ZStack {
-                                    Color.appBlack
-                                        .frame(height: 44)
-                                        .clipShape(RoundedRectangle(cornerRadius: 16))
-                                    Text("К оплате")
-                                        .font(.system(size: 17, weight: .bold))
-                                        .foregroundStyle(Color.appWhite)
+                                NavigationLink(value: CartViewRoute.pay) {
+                                    ZStack {
+                                        Color.appBlack
+                                            .frame(height: 44)
+                                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                                        Text("К оплате")
+                                            .font(.system(size: 17, weight: .bold))
+                                            .foregroundStyle(Color.appWhite)
+                                    }
+                                }
+                                .navigationDestination(for: CartViewRoute.self) { _ in
+                                    CurrencySelectionView(
+                                        viewModel: CurrencySelectionViewModel(service: CurrencyService()))
                                 }
                             }
                             .padding(.horizontal, 16)

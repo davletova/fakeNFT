@@ -1,10 +1,3 @@
-//
-//  ProfileView.swift
-//  FakeNFT
-//
-//  Created by Алия Давлетова on 21.11.2023.
-//
-
 import Foundation
 import SwiftUI
 import NukeUI
@@ -15,7 +8,12 @@ enum ProfileViewRoute {
 
 struct ProfileView: View {
     @ObservedObject var viewModel: ProfileViewModel
-    @State private var showingPopover = false
+    @State private var showingPopover: Bool
+    
+    init(viewModel: ProfileViewModel) {
+        self.viewModel = viewModel
+        self.showingPopover = false
+    }
     
     var body: some View {
         NavigationStack {
@@ -25,7 +23,7 @@ struct ProfileView: View {
                     VStack {
                         VStack(alignment: .leading) {
                             HStack {
-                                LazyImage(url: viewModel.profile?.getAvatarURL()) { state in
+                                LazyImage(url: viewModel.profile!.getAvatarURL()) { state in
                                     if let image = state.image {
                                         image
                                             .resizable()
@@ -139,7 +137,8 @@ struct ProfileView: View {
                 .popover(isPresented: $showingPopover) {
                     EditProfileView(
                         viewModel: EditProfileViewModel(
-                            profile: viewModel.profile!.profile
+                            profile: EditProfileDisplayModel(profile: viewModel.profile!.profile),
+                            service: ProfileService()
                         )
                     )
                 }
@@ -148,8 +147,8 @@ struct ProfileView: View {
     }
 }
 
-struct ProfileView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProfileView(viewModel: ProfileViewModel(service: ProfileService()))
-    }
-}
+//struct ProfileView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ProfileView(viewModel: ProfileViewModel(service: ProfileService()))
+//    }
+//}

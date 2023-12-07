@@ -59,6 +59,18 @@ class CartViewModel: ObservableObject {
     }
     
     func deleteItem(item: CartNFTDisplayModel) {
-        print("delete")
+        cartService.deleteNft(item.id)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    self.cartNFTDisplayModels = self.cartNFTDisplayModels.filter { $0.id != item.id }
+                    print("Request completed successfully.")
+                case .failure(let error):
+                    print("Request failed with error: \(error)")
+                }
+            }, receiveValue: {
+                print("Request completed without returning a value.")
+            })
+            .store(in: &subscriptions)
     }
 }
