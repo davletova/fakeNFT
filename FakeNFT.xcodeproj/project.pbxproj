@@ -71,6 +71,7 @@
 		4DFE5B632B1F04A700F079A3 /* CurrencySelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFE5B622B1F04A700F079A3 /* CurrencySelectionViewModel.swift */; };
 		4DFE5B652B1F059400F079A3 /* CurrencyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFE5B642B1F059400F079A3 /* CurrencyService.swift */; };
 		4DFE5B672B1F05DB00F079A3 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFE5B662B1F05DB00F079A3 /* Currency.swift */; };
+		4DFE5BCE2B23339B0072AF37 /* SuccessfulPurchase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFE5BCD2B23339B0072AF37 /* SuccessfulPurchase.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -156,6 +157,7 @@
 		4DFE5B622B1F04A700F079A3 /* CurrencySelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySelectionViewModel.swift; sourceTree = "<group>"; };
 		4DFE5B642B1F059400F079A3 /* CurrencyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyService.swift; sourceTree = "<group>"; };
 		4DFE5B662B1F05DB00F079A3 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
+		4DFE5BCD2B23339B0072AF37 /* SuccessfulPurchase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessfulPurchase.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,6 +190,7 @@
 		4D5EA3852B109C6800E9DBB5 /* Cart */ = {
 			isa = PBXGroup;
 			children = (
+				4DFE5BCC2B2332330072AF37 /* SuccessfulPurchase */,
 				4DFE5B5F2B1F041800F079A3 /* CurrencySelection */,
 				4DFE5B5E2B1F03CF00F079A3 /* Cart */,
 			);
@@ -496,6 +499,14 @@
 			path = CurrencySelection;
 			sourceTree = "<group>";
 		};
+		4DFE5BCC2B2332330072AF37 /* SuccessfulPurchase */ = {
+			isa = PBXGroup;
+			children = (
+				4DFE5BCD2B23339B0072AF37 /* SuccessfulPurchase.swift */,
+			);
+			path = SuccessfulPurchase;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -690,6 +701,7 @@
 				4D917C412B04C5E1004607D6 /* NFTService.swift in Sources */,
 				4D917C262B01DD50004607D6 /* NewNetworkRequest.swift in Sources */,
 				4D917C5E2B0C71D8004607D6 /* ProfileViewModel.swift in Sources */,
+				4DFE5BCE2B23339B0072AF37 /* SuccessfulPurchase.swift in Sources */,
 				4D917C652B0DF7B3004607D6 /* MyNFTListViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

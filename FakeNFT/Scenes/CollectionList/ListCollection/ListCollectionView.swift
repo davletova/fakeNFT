@@ -28,6 +28,8 @@ struct CollectionListView: View {
                         }
                         .navigationDestination(for: CollectionDisplayModel.self) { collectionDisplayModel in
                             CollectionDetailsView(collection: collectionDisplayModel.collection)
+                                .toolbar(.hidden, for: .tabBar)
+                                .toolbarRole(.editor)
                         }
                     }
                 case .loading:

@@ -97,6 +97,8 @@ struct ProfileView: View {
                                     .padding(.horizontal, 16)
                                     .padding(.top, 36)
                                     .navigationTitle("Избранные NFT")
+                                    .toolbar(.hidden, for: .tabBar)
+                                    .toolbarRole(.editor)
                                 case .mynft:
                                     MyNFTListView(
                                         viewModel: MyNFTListViewModel(
@@ -108,8 +110,12 @@ struct ProfileView: View {
                                     .padding(.horizontal, 16)
                                     .padding(.top, 36)
                                     .navigationTitle("Мои NFT")
+                                    .toolbar(.hidden, for: .tabBar)
+                                    .toolbarRole(.editor)
                                 case .website:
                                     WebView(url: viewModel.profile!.getWebsiteURL()!)
+                                        .toolbar(.hidden, for: .tabBar)
+                                        .toolbarRole(.editor)
                                 }
                             }
                     }

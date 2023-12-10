@@ -18,6 +18,7 @@ class CurrencySelectionViewModel: ObservableObject {
     
     @Published var currencies: [CurrencyDisplayModel] = []
     @Published var state: StateFoo
+    @Published var selectedCurrency: Currency?
     
     init(service: CurrencyServiceProtocol) {
         self.service = service

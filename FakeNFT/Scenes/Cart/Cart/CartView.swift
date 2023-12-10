@@ -32,10 +32,16 @@ struct CartView: View {
                                     .font(.system(size: 24, weight: .bold))
                                     .frame(width: 200, height: 200)
                             case .loaded:
-                                LazyVStack {
-                                    ForEach(viewModel.cartNFTDisplayModels) { (nft: CartNFTDisplayModel) in
-                                        CartItemView(nft: nft, viewVodel: viewModel)
-                                            .padding(.vertical, 16)
+                                if viewModel.cartNFTDisplayModels.count == 0 {
+                                    Text("Корзина пуста")
+                                        .font(.system(size: 17, weight: .bold))
+                                        .foregroundStyle(Color.appBlack)
+                                } else {
+                                    LazyVStack {
+                                        ForEach(viewModel.cartNFTDisplayModels) { (nft: CartNFTDisplayModel) in
+                                            CartItemView(nft: nft, viewVodel: viewModel)
+                                                .padding(.vertical, 16)
+                                        }
                                     }
                                 }
                             }
@@ -70,6 +76,9 @@ struct CartView: View {
                                 .navigationDestination(for: CartViewRoute.self) { _ in
                                     CurrencySelectionView(
                                         viewModel: CurrencySelectionViewModel(service: CurrencyService()))
+                                    .navigationTitle("Выберете способ оплаты")
+                                    .toolbar(.hidden, for: .tabBar)
+                                    .toolbarRole(.editor)
                                 }
                             }
                             .padding(.horizontal, 16)
@@ -97,6 +106,7 @@ struct CartView: View {
             .blur(radius: viewModel.deleteNFT == nil ? 0 : 10)
             if viewModel.deleteNFT != nil {
                 DeleteNFTView(viewModel: viewModel, nft: viewModel.deleteNFT!)
+                    .toolbar(.hidden, for: .tabBar)
             }
         }
     }
