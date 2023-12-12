@@ -16,12 +16,14 @@ protocol CartServiceProtocol {
     func getCart() -> AnyPublisher<[CartLine], Error>
     func addNft(_ id: Int) -> AnyPublisher<Void, Error>
     func deleteNft(_ id: Int) -> AnyPublisher<Void, Error>
+    func checkout() -> AnyPublisher<Void, Error>
 }
 
 final class CartService: CartServiceProtocol {
     private var getCartPath = "/api/v1/cart"
     private var addNftPath = "/api/v1/cart"
     private var deleteNftPath = "/api/v1/cart"
+    private var checkoutPath = "/api/v1/cart/checkout"
     
     func getCart() -> AnyPublisher<[CartLine], Error> {
         guard let req = URLRequest.makeHTTPRequest(
@@ -82,6 +84,37 @@ final class CartService: CartServiceProtocol {
             path: deleteNftPath,
             method: HTTPMehtod.delete,
             body: CartLine(nftId: id)
+        ) else {
+            return Fail(error: CartServiceError.invalidURL)
+                .eraseToAnyPublisher()
+        }
+        
+        return URLSession.shared
+            .dataTaskPublisher(for: req)
+            .tryMap { data, response in
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    throw NFTServiceError.invalidResponse
+                }
+
+                guard (200...299).contains(httpResponse.statusCode) else {
+                    throw NFTServiceError.requestFailed(httpResponse.statusCode)
+                }
+
+                return
+            }
+            .mapError { error in
+                // Handle any additional error cases if needed
+                error
+            }
+            .receive(on: RunLoop.main)
+            .eraseToAnyPublisher()
+    }
+    
+    func checkout() -> AnyPublisher<Void, Error> {
+        guard let req = URLRequest.makeHTTPRequest(
+            baseUrl: baseURL,
+            path: checkoutPath,
+            method: HTTPMehtod.post
         ) else {
             return Fail(error: CartServiceError.invalidURL)
                 .eraseToAnyPublisher()

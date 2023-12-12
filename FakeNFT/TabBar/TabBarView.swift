@@ -10,30 +10,30 @@ import Foundation
 import SwiftUI
 
 struct TabBarView: View {
-    @State private var selectedTab = 0
+    @ObservedObject var viewModel = TabBarViewModel()
     
     var body: some View {
-        TabView(selection: $selectedTab) {
+        TabView(selection: $viewModel.selectedTab) {
             ProfileView(viewModel: ProfileViewModel(service: ProfileService()))
                 .tabItem {
-                    selectedTab == 0 ? Label("Профиль", image: "profileActive") : Label("Профиль", image: "profileNoActive")
+                    viewModel.selectedTab == .profile ? Label("Профиль", image: "profileActive") : Label("Профиль", image: "profileNoActive")
                 }
-                .tag(0)
+                .tag(SelectedTab.profile)
             CollectionListView(viewModel: CollectionListViewModel(service: CollectionService()))
                 .tabItem {
-                    selectedTab == 1 ? Label("Каталог", image: "catalogActive") : Label("Каталог", image: "catalogNoActive")
+                    viewModel.selectedTab == .collection ? Label("Каталог", image: "catalogActive") : Label("Каталог", image: "catalogNoActive")
                 }
-                .tag(1)
+                .tag(SelectedTab.collection)
             CartView(viewModel: CartViewModel(nftService: NFTService(), cartService: CartService()))
                 .tabItem {
-                    selectedTab == 2 ? Label("Корзина", image: "basketActive") : Label("Корзина", image: "basketNoActive")
+                    viewModel.selectedTab == .cart ? Label("Корзина", image: "basketActive") : Label("Корзина", image: "basketNoActive")
                 }
-                .tag(2)
+                .tag(SelectedTab.cart)
             ListUsersContainer(viewModel: StatisticViewModel(service: UserService()))
                 .tabItem {
-                    selectedTab == 3 ? Label("Статистика", image: "statisticActive") : Label("Статистика", image: "statisticNoActive")
+                    viewModel.selectedTab == .statistic ? Label("Статистика", image: "statisticActive") : Label("Статистика", image: "statisticNoActive")
                 }
-                .tag(3)
+                .tag(SelectedTab.statistic)
         }
     }
 }

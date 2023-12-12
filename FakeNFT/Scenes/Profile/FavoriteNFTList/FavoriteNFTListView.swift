@@ -32,8 +32,7 @@ struct ListNFTView_Previews: PreviewProvider {
         FavoriteNFTListView(
             viewModel: FavoriteNFTListViewModel(
                 nftService: NFTService(),
-                profileService: ProfileService(),
-                orderService: CartService()
+                profileService: ProfileService()
                 )
         )
     }

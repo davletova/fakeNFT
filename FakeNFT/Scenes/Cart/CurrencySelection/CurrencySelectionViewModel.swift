@@ -12,24 +12,29 @@ struct CurrencyDisplayModel: Identifiable {
 }
 
 class CurrencySelectionViewModel: ObservableObject {
+    var mainNft: CartNFTDisplayModel
+
     private var service: CurrencyServiceProtocol
+    private var cartService: CartServiceProtocol
     
     private var subscriptions = Set<AnyCancellable>()
     
     @Published var currencies: [CurrencyDisplayModel] = []
     @Published var state: StateFoo
     @Published var selectedCurrency: Currency?
+    @Published var checkoutSuccess = false
     
-    init(service: CurrencyServiceProtocol) {
+    init(nft: CartNFTDisplayModel, service: CurrencyServiceProtocol, cartService: CartServiceProtocol) {
+        self.mainNft = nft
         self.service = service
         self.state = .loading
+        self.cartService = cartService
         
         loadData()
     }
     
     func loadData() {
         service.listCurrencies()
-            .print("------", to: nil)
             .map { currencies in
                 currencies.map { currency in
                     CurrencyDisplayModel(currency: currency)
@@ -46,3 +51,4 @@ class CurrencySelectionViewModel: ObservableObject {
             .store(in: &subscriptions)
     }
 }
+

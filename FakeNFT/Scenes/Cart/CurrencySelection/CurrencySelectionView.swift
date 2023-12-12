@@ -20,59 +20,98 @@ struct CurrencySelectionView: View {
     
     var body: some View {
         VStack {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: minWidth))], spacing: 28) {
-                ForEach(viewModel.currencies) { currency in
-                    CurrencyItemView(currency: currency, viewModel: viewModel)
-                        .onTapGesture {
-                            viewModel.selectedCurrency = currency.currency
-                        }
-                }
-            }
-            .padding(.top, 20)
-            .padding(.horizontal, 16)
-                
-            Spacer()
-
-            ZStack {
-                Color.appLightGray
-                    .frame(height: 186)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .ignoresSafeArea(.all, edges: .bottom)
-                VStack(spacing: 16) {
-                    VStack(alignment: .leading) {
-                        Text("Совершая покупку, вы соглашаетесь с условиями")
-                            .font(.system(size: 13, weight: .regular))
-                            .foregroundStyle(Color.appBlack)
-                        NavigationLink {
-                            WebView(url: cartPrivatePolicy)
-                                .toolbar(.hidden, for: .tabBar)
-                        } label: {
-                            Text("Пользовательского соглашения")
-                                .font(.system(size: 13, weight: .regular))
-                                .foregroundStyle(Color.appBlue)
-                        }
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: minWidth))], spacing: 28) {
+                    ForEach(viewModel.currencies) { currency in
+                        CurrencyItemView(currency: currency, viewModel: viewModel)
+                            .onTapGesture {
+                                viewModel.selectedCurrency = currency.currency
+                            }
                     }
-                    Button {
-                        
-                    } label: {
-                        ZStack {
-                            Color.appBlack
-                                .frame(height: 60)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
-                                .opacity(viewModel.selectedCurrency != nil ? 1 : 0.3)
-                            Text("Оплатить")
-                                .font(.system(size: 17, weight: .bold))
-                                .foregroundStyle(Color.appWhite)
-                        }
-                    }
-                    .disabled(viewModel.selectedCurrency == nil)
                 }
+                .padding(.top, 20)
                 .padding(.horizontal, 16)
-                .padding(.bottom, 34)
+                
+                Spacer()
+                
+                ZStack {
+                    Color.appLightGray
+                        .frame(height: 186)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .ignoresSafeArea(.all, edges: .bottom)
+                    VStack(spacing: 16) {
+                        VStack(alignment: .leading) {
+                            Text("Совершая покупку, вы соглашаетесь с условиями")
+                                .font(.system(size: 13, weight: .regular))
+                                .foregroundStyle(Color.appBlack)
+                            NavigationLink {
+                                WebView(url: cartPrivatePolicy)
+                                    .toolbar(.hidden, for: .tabBar)
+                            } label: {
+                                Text("Пользовательского соглашения")
+                                    .font(.system(size: 13, weight: .regular))
+                                    .foregroundStyle(Color.appBlue)
+                            }
+                        }
+                        
+                        NavigationLink {
+                            PurchaseResultView(viewModel: PurchaseResultViewModel(nft: viewModel.mainNft, service: CartService()))
+                                .navigationBarBackButtonHidden(true)
+                        } label: {
+                            ZStack {
+                                Color.appBlack
+                                    .frame(height: 60)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    .opacity(viewModel.selectedCurrency != nil ? 1 : 0.3)
+                                Text("Оплатить")
+                                    .font(.system(size: 17, weight: .bold))
+                                    .foregroundStyle(Color.appWhite)
+                            }
+                            .disabled(viewModel.selectedCurrency == nil)
+                        }
+                        
+//                        NavigationLink(isActive: $viewModel.checkoutSuccess) {
+//                            
+//                                SuccessfulPurchaseView(viewModel: SuccessfulPurchaseViewModel(nft: viewModel.mainNft, service: CartService()))
+//                            
+//                        } label: {
+//                            Button {
+//                                viewModel.checkout()
+//                            } label: {
+//                                ZStack {
+//                                    Color.appBlack
+//                                        .frame(height: 60)
+//                                        .clipShape(RoundedRectangle(cornerRadius: 12))
+//                                        .opacity(viewModel.selectedCurrency != nil ? 1 : 0.3)
+//                                    Text("Оплатить")
+//                                        .font(.system(size: 17, weight: .bold))
+//                                        .foregroundStyle(Color.appWhite)
+//                                }
+//                            }
+//                        }
+//                        .disabled(viewModel.selectedCurrency == nil)
+                        
+                        //                    Button {
+                        //
+                        //                    } label: {
+                        //                        ZStack {
+                        //                            Color.appBlack
+                        //                                .frame(height: 60)
+                        //                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                        //                                .opacity(viewModel.selectedCurrency != nil ? 1 : 0.3)
+                        //                            Text("Оплатить")
+                        //                                .font(.system(size: 17, weight: .bold))
+                        //                                .foregroundStyle(Color.appWhite)
+                        //                        }
+                        //                    }
+                        
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 34)
+                }
+                .frame(height: 186)
             }
-            .frame(height: 186)
-        }
-        .ignoresSafeArea(.all, edges: .bottom)
+                .ignoresSafeArea(.all, edges: .bottom)
+        
     }
 }
 
@@ -120,6 +159,26 @@ struct CurrencyItemView: View {
 
 struct CurrencySelectionView_Previews: PreviewProvider {
     static var previews: some View {
-        CurrencySelectionView(viewModel: CurrencySelectionViewModel(service: CurrencyService()))
+        CurrencySelectionView(viewModel: CurrencySelectionViewModel(
+            nft: CartNFTDisplayModel(
+                nft: NFT(
+                    createdAt: "",
+                    name: "Archie",
+                    images: [
+                        "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/April/1.png",
+                        "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/April/2.png",
+                        "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/April/3.png"
+                    ],
+                    rating: 6,
+                    description: "Персиковый — как облака над закатным солнцем в океане. В этой коллекции совмещены трогательная нежность и живая игривость сказочных зефирных зверей.",
+                    price: 56,
+                    author: 23,
+                    id: 32
+                )
+            ),
+            service: CurrencyService(),
+            cartService: CartService()
+        )
+        )
     }
 }

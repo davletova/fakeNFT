@@ -75,7 +75,7 @@ struct CartView: View {
                                 }
                                 .navigationDestination(for: CartViewRoute.self) { _ in
                                     CurrencySelectionView(
-                                        viewModel: CurrencySelectionViewModel(service: CurrencyService()))
+                                        viewModel: CurrencySelectionViewModel(nft: viewModel.cartNFTDisplayModels[0],  service: CurrencyService(), cartService: CartService()))
                                     .navigationTitle("Выберете способ оплаты")
                                     .toolbar(.hidden, for: .tabBar)
                                     .toolbarRole(.editor)

@@ -5,17 +5,15 @@ import Combine
 class ListNFTCollectionViewModel: ObservableObject {
     private var nftService: NFTServiceProtocol
     private var profileService: ProfileServiceProtocol
-    private var cartService: CartServiceProtocol
     
     private var subscriptions = Set<AnyCancellable>()
     
     @Published var nftDisplayModels: [NFTDisplayModel] = []
     @Published var state: StateFoo
     
-    init(nftIds: [Int], nftService: NFTServiceProtocol, profileService: ProfileServiceProtocol, cartService: CartServiceProtocol) {
+    init(nftIds: [Int], nftService: NFTServiceProtocol, profileService: ProfileServiceProtocol) {
         self.nftService = nftService
         self.profileService = profileService
-        self.cartService = cartService
         
         self.state = .loading
         self.loadData(nftIds)
@@ -23,7 +21,7 @@ class ListNFTCollectionViewModel: ObservableObject {
     
     func loadData(_ nftIds: [Int]) {
         let likes$ = profileService.getProfileLikeNFTs()
-        let cart$ = cartService.getCart()
+        let myNft$ = profileService.getProfileNFTs()
         let nfts$ = Publishers.MergeMany(nftIds.map(nftService.getNFT)).collect()
                 
         nfts$
@@ -37,10 +35,10 @@ class ListNFTCollectionViewModel: ObservableObject {
             .store(in: &subscriptions)
         
         
-        Publishers.Zip3(likes$, cart$, nfts$)
-            .map { likes, cart, nfts in
+        Publishers.Zip3(likes$, myNft$, nfts$)
+            .map { likes, my, nfts in
                 let likesNftIds = Set(likes.map { $0.id } )
-                let cartNftIds = Set(cart.map { $0.nftId } )
+                let cartNftIds = Set(my.map { $0.id } )
                 
                 return nfts.map { nft in
                     NFTDisplayModel(nft: nft, isLike: likesNftIds.contains(nft.id), isOnOrder: cartNftIds.contains(nft.id))

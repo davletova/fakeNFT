@@ -5,17 +5,15 @@ import Combine
 class FavoriteNFTListViewModel: ObservableObject {
     private var nftService: NFTServiceProtocol
     private var profileService: ProfileServiceProtocol
-    private var cartService: CartServiceProtocol
     
     private var subscriptions = Set<AnyCancellable>()
     
     @Published var nftDisplayModels: [NFTDisplayModel] = []
     @Published var state: StateFoo
     
-    init(nftService: NFTServiceProtocol, profileService: ProfileServiceProtocol, orderService: CartServiceProtocol) {
+    init(nftService: NFTServiceProtocol, profileService: ProfileServiceProtocol) {
         self.nftService = nftService
         self.profileService = profileService
-        self.cartService = orderService
         
         self.state = .loading
         self.loadData()
@@ -23,14 +21,13 @@ class FavoriteNFTListViewModel: ObservableObject {
     
     func loadData() {
         let likes$ = profileService.getProfileLikeNFTs()
-        let cart$ = cartService.getCart()
+        let my$ = profileService.getProfileNFTs()
         
-        Publishers.Zip(likes$, cart$)
+        Publishers.Zip(likes$, my$)
             .map { likes, cart in
-                let cartNftIds = Set(cart.map { $0.nftId } )
-                
+                let myNftIds = Set(cart.map { $0.id } )
                 return likes.map { nft in
-                    NFTDisplayModel(nft: nft, isLike: true, isOnOrder: cartNftIds.contains(nft.id))
+                    NFTDisplayModel(nft: nft, isLike: true, isOnOrder: myNftIds.contains(nft.id))
                 }
             }
             .mapError { [weak self] err in
