@@ -8,6 +8,10 @@
 import Foundation
 import SwiftUI
 
+enum Foo {
+    case detailed(CollectionDis)
+}
+
 struct CollectionListView: View {
     @ObservedObject var viewModel: CollectionListViewModel
     

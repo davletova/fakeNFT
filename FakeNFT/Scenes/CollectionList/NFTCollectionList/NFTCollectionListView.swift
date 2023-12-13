@@ -33,8 +33,7 @@ struct ListNFTCollectionView_Previews: PreviewProvider {
             viewModel: ListNFTCollectionViewModel(
                 nftIds: [2, 5, 6, 7, 9],
                 nftService: NFTService(),
-                profileService: ProfileService(),
-                cartService: CartService()
+                profileService: ProfileService()
             )
         )
     }

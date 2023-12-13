@@ -53,8 +53,7 @@ struct CollectionDetailsView: View {
                     viewModel: ListNFTCollectionViewModel(
                         nftIds: viewModel.collection.collection.nfts,
                         nftService: NFTService(),
-                        profileService: ProfileService(),
-                        cartService: CartService()
+                        profileService: ProfileService()
                     )
                 )
                 
