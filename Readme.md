@@ -22,9 +22,9 @@
 - Пользователь может посмотреть рейтинг пользователей и информацию о пользователях.
 - Пользователь может смотреть информацию и своем профиле, включая информацию об избранных и принадлежащих ему NFT.
 
-<img width="442" alt="Снимок экрана 2023-12-14 в 17 19 48" src="https://github.com/davletova/fakeNFT/assets/14953951/28134b72-9b14-4484-b12c-ea694910aa02">
-<img width="443" alt="Снимок экрана 2023-12-14 в 17 20 06" src="https://github.com/davletova/fakeNFT/assets/14953951/f7891d2f-fd75-4f1d-b9e8-f506f326643f">
-<img width="440" alt="Снимок экрана 2023-12-14 в 17 20 25" src="https://github.com/davletova/fakeNFT/assets/14953951/7c7b26c7-f341-4458-978a-bc9d093f1d66">
+<img width="300" height="660" alt="Снимок экрана 2023-12-14 в 17 19 48" src="https://github.com/davletova/fakeNFT/assets/14953951/28134b72-9b14-4484-b12c-ea694910aa02">
+<img width="300" height="660" alt="Снимок экрана 2023-12-14 в 17 20 06" src="https://github.com/davletova/fakeNFT/assets/14953951/f7891d2f-fd75-4f1d-b9e8-f506f326643f">
+<img width="300" height="660" alt="Снимок экрана 2023-12-14 в 17 20 25" src="https://github.com/davletova/fakeNFT/assets/14953951/7c7b26c7-f341-4458-978a-bc9d093f1d66">
 
 ### Стек
 - SwiftUI
